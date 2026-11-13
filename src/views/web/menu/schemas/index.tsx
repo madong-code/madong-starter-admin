@@ -18,9 +18,8 @@ function arrayToTree(
     if (item[pidKey]) {
       const p = map.get(item[pidKey]);
       p ? p[childrenKey].push(node) : roots.push(node);
-    } else {
-      roots.push(node);
     }
+    else {roots.push(node);}
   });
   return roots;
 }
@@ -48,6 +47,7 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'web:menu:delete',
       view: 'web:menu:read',
     },
+    // pid 与后端 web_menu.pid 字段对应（父菜单ID）；reserve 让刷新后保持树形展开状态
     tree: { id: 'id', pid: 'pid', children: 'children', reserve: true },
     beforeFetch: (params: any) => ({ ...params, page: 1, limit: 999 }),
     afterFetch: (res: any) => {
@@ -63,25 +63,38 @@ export const useCrudSchema = (): CrudSchema => {
         treeNode: true,
         align: 'left',
       },
-      { field: 'code', title: $t('web.menu.table.columns.code'), minWidth: 120 },
-
-      { field: 'url', title: $t('web.menu.table.columns.url'), minWidth: 100 },
-      { field: 'sort', title: $t('web.menu.table.columns.sort'), minWidth: 80 },
-            {
+      {
+        field: 'code',
+        title: $t('web.menu.table.columns.code'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
         field: 'category',
         title: $t('web.menu.table.columns.category'),
-        minWidth: 110,
-        align:'left',
+        minWidth: 80,
         cellRender: {
           name: 'CellDictTag',
           attrs: { code: DictEnum.WEB_MENU_CATEGORY },
         },
       },
       {
+        field: 'url',
+        title: $t('web.menu.table.columns.url'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'sort',
+        title: $t('web.menu.table.columns.sort'),
+        minWidth: 80,
+        align: 'left',
+      },
+      {
         field: 'type',
         title: $t('web.menu.table.columns.type'),
-        minWidth: 100,
-        align:'left',
+        minWidth: 80,
+        align: 'left',
         cellRender: {
           name: 'CellDictTag',
           attrs: { code: DictEnum.WEB_MENU_TYPE },
@@ -90,8 +103,7 @@ export const useCrudSchema = (): CrudSchema => {
       {
         field: 'target',
         title: $t('web.menu.table.columns.target'),
-        minWidth: 100,
-        align:'left',
+        minWidth: 80,
         cellRender: {
           name: 'CellDictTag',
           attrs: { code: DictEnum.WEB_MENU_TARGET },
@@ -100,10 +112,19 @@ export const useCrudSchema = (): CrudSchema => {
       {
         field: 'is_show',
         title: $t('web.menu.table.columns.is_show'),
-        minWidth: 90,
+        minWidth: 80,
         cellRender: {
           name: 'CellDictTag',
           attrs: { code: DictEnum.SYS_YES_NO },
+        },
+      },
+      {
+        field: 'enabled',
+        title: $t('web.menu.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
         },
       },
       {
@@ -124,15 +145,6 @@ export const useCrudSchema = (): CrudSchema => {
           attrs: { code: DictEnum.SYS_YES_NO },
         },
       },
-      {
-        field: 'enabled',
-        title: $t('web.menu.table.columns.enabled'),
-        minWidth: 90,
-        cellRender: {
-          name: 'CellDictTag',
-          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
-        },
-      },
     ],
 
     searchForm: {
@@ -147,7 +159,8 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: 'web',
           componentProps: {
             api: '/system/menu/app/list',
-            requestMethod: 'GET',
+            requestMethod: 'get',
+            params: { end: 'web' },
           },
         },
         {
@@ -161,6 +174,15 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'LIKE_name',
           label: $t('web.menu.table.search.name'),
           componentProps: { clearable: true },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_code',
+          label: $t('web.menu.table.search.code'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('web.menu.table.search.placeholder_code'),
+          },
         },
         {
           component: 'ApiDict',
@@ -206,7 +228,8 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             api: '/system/menu/app/list',
-            requestMethod: 'GET',
+            requestMethod: 'get',
+            params: { end: 'web' },
           },
         },
         {
@@ -217,18 +240,22 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
         },
         {
-          fieldName: 'code',
-          label: $t('web.menu.form.code'),
-          component: 'Input',
-          formItemClass: 'col-span-2',
-          componentProps: { clearable: true, maxlength: 64 },
-        },
-        {
           fieldName: 'name',
           label: $t('web.menu.form.name'),
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
+        },
+        {
+          fieldName: 'code',
+          label: $t('web.menu.form.code'),
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            placeholder: $t('web.menu.form.placeholder_code'),
+            clearable: true,
+            maxlength: 64,
+          },
         },
         {
           fieldName: 'type',

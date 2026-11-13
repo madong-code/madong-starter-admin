@@ -1,3 +1,3 @@
-export { default as Dialog } from './dialog.vue';
-export type * from './types.d.ts';
-export { useDialog } from './use-dialog';
+export { default as Dialog } from './dialog.vue'
+export { useDialog } from './use-dialog'
+export type * from './types.d.ts'

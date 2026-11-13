@@ -1,10 +1,10 @@
-export type HttpMethod = 'delete' | 'get' | 'patch' | 'post' | 'put';
+export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch'
 
 export interface RouteRow {
-  name: string;
-  method: Uppercase<HttpMethod>;
-  path: string;
-  title?: string;
-  type?: number;
-  code?: string;
+  name: string
+  method: Uppercase<HttpMethod>
+  path: string
+  title?: string
+  type?: number
+  code?: string
 }

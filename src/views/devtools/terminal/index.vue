@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted, reactive, watch } from 'vue';
 
+import { useVbenModal } from '#/core/ui/common';
+
 import { ElMessage } from 'element-plus';
 import { TerminalSquare } from 'lucide-vue-next';
 
-import { useVbenModal } from '#/core/ui/common';
 import { $t } from '#/locales';
 import { useTerminalStore } from '#/store';
 

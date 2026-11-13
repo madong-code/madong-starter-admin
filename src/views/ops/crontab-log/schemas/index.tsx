@@ -20,6 +20,8 @@ export const useCrudSchema = (crontab_id?: number | string): CrudSchema => {
     hasView: false,
     hasRemove: true,
     permissions: {
+      add: 'crontab:log:create',
+      edit: 'crontab:log:update',
       remove: 'crontab:log:delete',
       view: 'crontab:log:read',
     },

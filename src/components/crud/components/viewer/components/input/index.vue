@@ -22,10 +22,7 @@ const isMultiline = computed(() => {
 </script>
 
 <template>
-  <span
-    class="reader-input"
-    :class="[{ 'reader-input-multiline': isMultiline }]"
-  >
+  <span class="reader-input" :class="[{ 'reader-input-multiline': isMultiline }]">
     <template v-if="value !== undefined && value !== null">
       <template v-if="isMultiline">
         <pre>{{ value }}</pre>

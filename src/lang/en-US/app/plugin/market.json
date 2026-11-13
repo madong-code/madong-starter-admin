@@ -7,6 +7,7 @@
     "updatable": "Updatable"
   },
   "uncategorized": "Uncategorized",
+  "more": "More",
   "search_placeholder": "Search module name…",
   "card_view": "Card",
   "table_view": "Table",
@@ -19,17 +20,18 @@
   "installed_tag": "Installed",
   "uninstalled_tag": "Uninstalled",
   "update_log": "Changelog",
-  "install_menu": "Install Menu",
-  "uninstall_menu": "Uninstall Menu",
-  "update_db": "Update Database",
+  "install_menu": "Install",
+  "uninstall_menu": "Uninstall",
+  "not_authorized": "Not Authorized",
+  "update_db": "Update",
   "update_info": "Update Info",
-  "more": "More",
-  "invalid_env_check": "Incomplete module info, cannot perform environment check",
-  "invalid_uninstall": "Incomplete module info, cannot uninstall",
   "column_seq": "#",
-  "column_module": "Module Info",
+  "column_module": "Module",
   "column_version": "Version",
   "column_status": "Status",
+  "column_auth_status": "Auth Status",
+  "authorized_tag": "Authorized",
+  "unauthorized_tag": "Unauthorized",
   "column_action": "Actions",
   "detail": {
     "title": "Module Detail",
@@ -63,8 +65,22 @@
     "fail": "Failed to uninstall menu"
   },
   "update": {
-    "success": "Module {name} database updated successfully",
-    "fail": "Failed to update database"
+    "success": "Module {name} updated successfully",
+    "fail": "Update failed",
+    "dialog_title": "Update Module",
+    "start": "Start Update",
+    "no_install": "Plugin not installed yet, cannot update",
+    "up_to_date": "Already up-to-date, no update needed",
+    "current_version": "Current Version",
+    "platform_version": "Platform Version",
+    "log_title": "Execution Log",
+    "log_empty": "No logs yet, click 'Start Update'",
+    "sync_status": "Sync status: {state}"
+  },
+  "status": {
+    "available": "Available",
+    "installed": "Installed",
+    "upgradeable": "Upgradable"
   },
   "upgrade_log": {
     "title": "Update Info",
@@ -86,9 +102,9 @@
     "install": {
       "immediate": "Install",
       "title": "Install Module",
-      "step1": "Environment Check",
-      "step2": "Install Progress",
-      "step3": "Install Complete",
+      "step1": "Confirm Info",
+      "step2": "Select File",
+      "step3": "Install",
       "path": "Path",
       "requirement": "Requirement",
       "status": "Status",
@@ -107,14 +123,7 @@
       "next": "Next",
       "success": "Module {name} installed successfully",
       "fail": "Failed to install module",
-      "invalid": "Incomplete module info",
-      "readable": "Readable",
-      "writable": "Writable",
-      "log_start": "Starting installation...",
-      "log_retry": "Retrying installation...",
-      "log_warn_prefix": "Warning: {msg}",
-      "log_error_prefix": "Error: {msg}",
-      "sse_error": "SSE connection error"
+      "invalid": "Incomplete module info"
     },
     "delete": {
       "confirm_title": "Confirm Delete",
@@ -136,7 +145,7 @@
       "immediate": "Uninstall",
       "title": "Uninstall Module",
       "step1": "Confirm Info",
-      "step2": "Uninstall Progress",
+      "step2": "Confirm Uninstall",
       "step3": "Uninstall Complete",
       "confirm_msg": "About to uninstall module {name}. This will remove menus, files, and data.",
       "operations_title": "The following operations will be performed:",
@@ -155,11 +164,7 @@
       "close": "Close",
       "refresh": "Refresh List",
       "success": "Module {name} uninstalled successfully",
-      "fail": "Failed to uninstall module",
-      "log_start": "Starting uninstall...",
-      "log_warn_prefix": "Warning: {msg}",
-      "log_error_prefix": "Error: {msg}",
-      "sse_error": "SSE connection error"
+      "fail": "Failed to uninstall module"
     }
   }
 }

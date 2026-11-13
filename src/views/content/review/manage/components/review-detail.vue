@@ -27,10 +27,13 @@ import { REVIEW_STATUS_OPTIONS } from '../schemas';
 const loading = ref(false);
 const detail = ref<null | ReviewDetail>(null);
 
-const statusColorMap: Record<number, string> = {};
-for (const item of REVIEW_STATUS_OPTIONS) {
-  statusColorMap[item.value] = item.color;
-}
+const statusColorMap: Record<number, string> = REVIEW_STATUS_OPTIONS.reduce(
+  (map, item) => {
+    map[item.value] = item.color;
+    return map;
+  },
+  {} as Record<number, string>,
+);
 
 function statusColor(status: number): string {
   return statusColorMap[status] ?? 'default';
@@ -43,14 +46,13 @@ function formatDateTime(value: any): string {
     ts = value;
   } else if (typeof value === 'object') {
     // PHP Carbon toArray() 格式：优先 timestamp、formatted、date、year
-    if (value.timestamp !== null && value.timestamp !== undefined)
-      ts = value.timestamp;
+    if (value.timestamp != null) ts = value.timestamp;
     else if (value.formatted) return value.formatted;
     else if (value.date) {
       const parsed = new Date(value.date);
       if (!Number.isNaN(parsed.getTime())) return formatDateStr(parsed);
       return '-';
-    } else if (value.year !== null && value.year !== undefined) {
+    } else if (value.year != null) {
       // {year, month, day, hour, minute, second}
       const d = new Date(
         value.year,

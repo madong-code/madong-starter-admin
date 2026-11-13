@@ -157,8 +157,7 @@ function getTaskStatus(status: number) {
                 v-for="(msg, index) in item.message"
                 :key="index"
                 class="message-item"
-                >{{ msg }}</pre
-              >
+                >{{ msg }}</pre>
             </div>
           </template>
         </div>

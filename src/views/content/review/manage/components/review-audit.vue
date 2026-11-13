@@ -57,7 +57,7 @@ const typeText = computed(() => {
 const isReject = computed(() => action.value === 'reject');
 const reasonLabel = computed(() =>
   isReject.value
-    ? `* ${$t('content.review.manage.audit.reason')}`
+    ? `* ${  $t('content.review.manage.audit.reason')}`
     : $t('content.review.manage.audit.reason'),
 );
 const reasonPlaceholder = computed(() =>
@@ -277,7 +277,7 @@ defineExpose({ show });
 .review-audit__content {
   line-height: 1.6;
   color: var(--el-text-color-regular);
-  overflow-wrap: break-word;
+  word-break: break-word;
   white-space: pre-wrap;
 }
 

@@ -18,12 +18,8 @@ import { buildStaticUrl } from '#/utils/url';
 
 interface Props {
   accept?: string;
-  /** 直传模式：点击预览块直接打开系统文件选择器上传，不弹素材库对话框（单选/多选均支持） */
-  directUpload?: boolean;
   disabled?: boolean;
   modelValue?: null | string | string[];
-  /** 直传模式下允许的文件大小上限（MB） */
-  maxSizeMB?: number;
   multiple?: boolean;
   objectType?: string;
   shape?: 'circle' | 'square';
@@ -32,10 +28,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   accept: 'image/*',
-  directUpload: false,
   disabled: false,
   modelValue: null,
-  maxSizeMB: 2,
   multiple: false,
   objectType: 'default',
   shape: 'square',
@@ -63,11 +57,7 @@ const displayImages = computed<string[]>(() => {
 });
 
 const openSelector = () => {
-  if (props.disabled || uploading.value) return;
-  if (props.directUpload) {
-    fileInputRef.value?.click();
-    return;
-  }
+  if (props.disabled) return;
   dialogVisible.value = true;
 };
 
@@ -191,9 +181,8 @@ const handleDialogConfirm = () => {
     ElMessage.warning($t('components.form.image_picker.empty'));
     return;
   }
-  const result: string | string[] = props.multiple
-    ? selectedInDialog.value.map((f) => f.base_path || f.url)
-    : selectedInDialog.value[0]?.base_path ||
+  let result: string | string[];
+  result = props.multiple ? selectedInDialog.value.map((f) => f.base_path || f.url) : selectedInDialog.value[0]?.base_path ||
       selectedInDialog.value[0]?.url ||
       '';
   mValue.value = result as null | string | string[];
@@ -215,132 +204,20 @@ const customUpload = async (e: any) => {
     ElMessage.error($t('components.form.image_picker.upload_error'));
   }
 };
-
-// ============================================================
-// 直传模式：点击预览块直接选择文件上传，不走素材库对话框
-// ============================================================
-const fileInputRef = ref<HTMLInputElement>();
-const uploading = ref(false);
-
-// 从 accept 推导允许的扩展名；含通配或未知 MIME 时不做扩展名白名单限制
-const allowedExtensions = computed<string[]>(() => {
-  const mimeToExt: Record<string, string[]> = {
-    'image/jpeg': ['jpg', 'jpeg'],
-    'image/png': ['png'],
-    'image/svg+xml': ['svg'],
-  };
-  const exts = new Set<string>();
-  let generic = false;
-  for (const part of props.accept.split(',')) {
-    const token = part.trim().toLowerCase();
-    if (!token) continue;
-    if (token.startsWith('.')) {
-      exts.add(token.slice(1));
-    } else if (mimeToExt[token]) {
-      mimeToExt[token]?.forEach((ext) => exts.add(ext));
-    } else {
-      generic = true;
-    }
-  }
-  return generic ? [] : [...exts];
-});
-
-const handleFileChange = async (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  const selected = [...(input.files ?? [])];
-  // 清空 value，保证连续选择同一文件也能再次触发 change
-  input.value = '';
-  if (selected.length === 0 || props.disabled) return;
-
-  const allowed = allowedExtensions.value;
-  const validFiles: File[] = [];
-  for (const file of selected) {
-    const extension = (file.name.split('.').pop() || '').toLowerCase();
-    if (allowed.length > 0 && !allowed.includes(extension)) {
-      ElMessage.error(
-        $t('components.form.image_picker.format_error', {
-          exts: allowed.join(' / ').toUpperCase(),
-        }),
-      );
-      continue;
-    }
-    if (file.size > props.maxSizeMB * 1024 * 1024) {
-      ElMessage.error(
-        $t('components.form.image_picker.size_error', {
-          size: props.maxSizeMB,
-        }),
-      );
-      continue;
-    }
-    validFiles.push(file);
-  }
-  if (validFiles.length === 0) return;
-
-  // 单选模式只处理第一个文件
-  if (!props.multiple) {
-    validFiles.splice(1);
-  }
-
-  uploading.value = true;
-  try {
-    const uploaded: string[] = [];
-    for (const file of validFiles) {
-      try {
-        const res: any = await FilesService.uploadImage({
-          file,
-          sub_dir: props.objectType || 'default',
-        });
-        const path = res?.base_path || res?.url || '';
-        if (!path) throw new Error('upload response missing path');
-        uploaded.push(path);
-      } catch {
-        ElMessage.error($t('components.form.image_picker.upload_error'));
-      }
-    }
-    if (uploaded.length === 0) return;
-
-    if (props.multiple) {
-      const current = Array.isArray(mValue.value) ? mValue.value : [];
-      const next = [...current, ...uploaded];
-      mValue.value = next;
-      emit('change', next);
-      emit('confirm', next);
-    } else {
-      const [path] = uploaded;
-      if (!path) return;
-      mValue.value = path;
-      emit('change', path);
-      emit('confirm', path);
-    }
-    ElMessage.success($t('components.form.image_picker.upload_success'));
-  } finally {
-    uploading.value = false;
-  }
-};
 </script>
 
 <template>
   <div class="image-selector">
-    <!-- 直传模式隐藏文件选择器 -->
-    <input
-      v-if="directUpload"
-      ref="fileInputRef"
-      :accept="accept"
-      :multiple="multiple"
-      class="hidden"
-      type="file"
-      @change="handleFileChange"
-    />
     <!-- 单选预览 -->
     <template v-if="!multiple">
       <div
         class="preview-wrapper"
-        :class="[`is-${shape}`, `is-${size}`, { 'is-uploading': uploading }]"
+        :class="[`is-${shape}`, `is-${size}`]"
         @click="openSelector"
       >
         <img
           v-if="displayImages.length > 0"
-          :src="buildStaticUrl(displayImages[0] ?? '')"
+          :src="displayImages[0]"
           class="preview-image"
         />
         <div
@@ -351,23 +228,9 @@ const handleFileChange = async (event: Event) => {
         </div>
 
         <div v-if="!disabled" class="image-overlay">
-          <Icon
-            :class="{ 'animate-spin': uploading }"
-            :icon="
-              uploading
-                ? 'lucide:loader-circle'
-                : directUpload
-                  ? 'lucide:upload'
-                  : 'lucide:pencil'
-            "
-            class="text-2xl text-white"
-          />
+          <Icon icon="lucide:pencil" class="text-2xl text-white" />
           <div class="overlay-text">
-            {{
-              directUpload
-                ? $t('components.form.image_picker.upload')
-                : $t('components.form.image_picker.select')
-            }}
+            {{ $t('components.form.image_picker.select') }}
           </div>
         </div>
 
@@ -390,7 +253,7 @@ const handleFileChange = async (event: Event) => {
           class="preview-wrapper is-square"
           :class="`is-${size}`"
         >
-          <img :src="buildStaticUrl(image)" class="preview-image" />
+          <img :src="image" class="preview-image" />
           <div
             v-if="!disabled"
             class="remove-btn"
@@ -406,17 +269,9 @@ const handleFileChange = async (event: Event) => {
           :class="`is-${size}`"
           @click="openSelector"
         >
-          <Icon
-            :class="{ 'animate-spin': uploading }"
-            :icon="uploading ? 'lucide:loader-circle' : 'lucide:plus'"
-            class="text-2xl"
-          />
+          <Icon icon="lucide:plus" class="text-2xl" />
           <div class="add-text">
-            {{
-              directUpload
-                ? $t('components.form.image_picker.upload')
-                : $t('components.form.image_picker.select')
-            }}
+            {{ $t('components.form.image_picker.select') }}
           </div>
         </div>
       </div>
@@ -546,11 +401,6 @@ const handleFileChange = async (event: Event) => {
   .remove-btn {
     display: flex;
   }
-}
-
-/* 直传上传中始终展示加载遮罩，避免鼠标移开后无进度反馈 */
-.preview-wrapper.is-uploading .image-overlay {
-  opacity: 1;
 }
 
 .preview-wrapper.is-circle {

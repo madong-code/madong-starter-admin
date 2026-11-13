@@ -7,6 +7,7 @@
     "updatable": "可更新"
   },
   "uncategorized": "未分类",
+  "more": "更多",
   "search_placeholder": "搜索模块名称…",
   "card_view": "卡片",
   "table_view": "表格",
@@ -19,17 +20,18 @@
   "installed_tag": "已安装",
   "uninstalled_tag": "未安装",
   "update_log": "更新日志",
-  "install_menu": "安装菜单",
-  "uninstall_menu": "卸载菜单",
-  "update_db": "更新数据库",
+  "install_menu": "安装",
+  "uninstall_menu": "卸载",
+  "not_authorized": "未授权",
+  "update_db": "更新",
   "update_info": "更新信息",
-  "more": "更多",
-  "invalid_env_check": "模块信息不完整，无法进行环境检测",
-  "invalid_uninstall": "模块信息不完整，无法进行卸载",
   "column_seq": "#",
-  "column_module": "模块信息",
+  "column_module": "模块",
   "column_version": "版本",
   "column_status": "状态",
+  "column_auth_status": "授权状态",
+  "authorized_tag": "已授权",
+  "unauthorized_tag": "未授权",
   "column_action": "操作",
   "detail": {
     "title": "模块详情",
@@ -63,8 +65,22 @@
     "fail": "卸载菜单失败"
   },
   "update": {
-    "success": "模块 {name} 数据库更新成功",
-    "fail": "更新数据库失败"
+    "success": "模块 {name} 更新成功",
+    "fail": "更新失败",
+    "dialog_title": "更新模块",
+    "start": "开始更新",
+    "no_install": "插件尚未安装,无法更新",
+    "up_to_date": "当前已是最新版本,无需更新",
+    "current_version": "当前版本",
+    "platform_version": "平台版本",
+    "log_title": "执行日志",
+    "log_empty": "暂无日志,点击「开始更新」",
+    "sync_status": "同步状态: {state}"
+  },
+  "status": {
+    "available": "可安装",
+    "installed": "已安装",
+    "upgradeable": "可更新"
   },
   "upgrade_log": {
     "title": "更新信息",
@@ -86,9 +102,9 @@
     "install": {
       "immediate": "安装",
       "title": "安装模块",
-      "step1": "环境检查",
-      "step2": "安装进度",
-      "step3": "安装完成",
+      "step1": "信息确认",
+      "step2": "选择安装文件",
+      "step3": "执行安装",
       "path": "路径",
       "requirement": "要求",
       "status": "状态",
@@ -107,14 +123,7 @@
       "next": "下一步",
       "success": "模块 {name} 安装成功",
       "fail": "安装模块失败",
-      "invalid": "模块信息不完整",
-      "readable": "可读",
-      "writable": "可写",
-      "log_start": "开始安装...",
-      "log_retry": "开始重新安装...",
-      "log_warn_prefix": "警告: {msg}",
-      "log_error_prefix": "错误: {msg}",
-      "sse_error": "SSE连接错误"
+      "invalid": "模块信息不完整"
     },
     "delete": {
       "confirm_title": "删除确认",
@@ -136,7 +145,7 @@
       "immediate": "卸载",
       "title": "卸载模块",
       "step1": "信息确认",
-      "step2": "卸载进度",
+      "step2": "确认卸载",
       "step3": "卸载完成",
       "confirm_msg": "即将卸载模块 {name}，此操作将移除菜单、删除文件和数据",
       "operations_title": "卸载将执行以下操作：",
@@ -155,11 +164,7 @@
       "close": "关闭",
       "refresh": "刷新列表",
       "success": "模块 {name} 卸载成功",
-      "fail": "卸载模块失败",
-      "log_start": "开始卸载...",
-      "log_warn_prefix": "警告: {msg}",
-      "log_error_prefix": "错误: {msg}",
-      "sse_error": "SSE连接错误"
+      "fail": "卸载模块失败"
     }
   }
 }

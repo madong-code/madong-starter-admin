@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { useCrud } from '#/adapter/crud';
 import { Page } from '#/core/ui/common';
+
+import { useCrud } from '#/adapter/crud';
 
 import { useCrudSchema } from './schemas';
 

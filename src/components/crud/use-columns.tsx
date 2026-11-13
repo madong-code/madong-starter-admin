@@ -9,6 +9,11 @@ import { $t } from '#/locales';
 
 import { TableAction } from './components/table-action';
 
+interface UseColumnsOptions {
+  columns: CrudColumn[];
+  tableActionColumn?: Partial<CrudColumn>;
+}
+
 /**
  * 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中，其余继承全局 grid.align
  */
@@ -18,11 +23,6 @@ const BUILTIN_CENTER_COLUMNS = (col: CrudColumn) =>
   /(_at|_time)$|^(created|updated|create|update|time|date)/i.test(
     String(col.field ?? ''),
   );
-
-interface UseColumnsOptions {
-  columns: CrudColumn[];
-  tableActionColumn?: Partial<CrudColumn>;
-}
 
 export function useColumns(
   options: UseColumnsOptions,
@@ -65,9 +65,9 @@ export function useColumns(
         title: $t('components.crud.table.action'),
         width: 220,
         align: 'center',
-        showOverflow: 'tooltip',
-        // 操作栏默认固定显示在右侧，可通过 tableActionColumn.fixed 显式覆盖（如 fixed: false）
+        // 操作栏默认固定显示在右侧，可通过 tableActionColumn.fixed 显式覆盖
         fixed: 'right',
+        showOverflow: 'tooltip',
         slots: {
           default: ({ row }: { row: any }) => (
             <TableAction

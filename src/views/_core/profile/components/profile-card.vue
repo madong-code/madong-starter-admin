@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { useUserStore } from '#/core/stores';
+
 import { ElTag } from 'element-plus';
 
 import Avatar from '#/components/form/components/avatar/index.vue';
 import { Icon } from '#/components/icon';
-import { useUserStore } from '#/core/stores';
 import { $t } from '#/locales';
 import { formatDate } from '#/utils';
 
@@ -111,8 +112,7 @@ function handleAvatarSuccess(newUrl: string) {
             />
             <span
               class="ml-2.5 text-sm text-gray-600 dark:text-gray-300 truncate"
-              >{{ userInfo?.email || $t('system.profile.card.not_set') }}</span
-            >
+              >{{ userInfo?.email || $t('system.profile.card.not_set') }}</span>
           </div>
           <div class="flex items-center">
             <Icon
@@ -158,8 +158,7 @@ function handleAvatarSuccess(newUrl: string) {
               <span
                 v-if="!userInfo?.roles?.length"
                 class="text-sm text-gray-400"
-                >—</span
-              >
+                >—</span>
             </div>
           </div>
           <div class="flex items-center">
@@ -167,26 +166,22 @@ function handleAvatarSuccess(newUrl: string) {
               icon="ant-design:clock-circle-outlined"
               class="text-gray-400 shrink-0 text-base"
             />
-            <span class="ml-2.5 text-sm text-gray-600 dark:text-gray-300"
-              >{{ $t('system.profile.card.create_time') }}:
+            <span class="ml-2.5 text-sm text-gray-600 dark:text-gray-300">{{ $t('system.profile.card.create_time') }}:
               {{
                 formatTime(userInfo?.create_time || userInfo?.created_at) ||
                 $t('system.profile.card.unknown')
-              }}</span
-            >
+              }}</span>
           </div>
           <div class="flex items-center">
             <Icon
               icon="ant-design:login-outlined"
               class="text-gray-400 shrink-0 text-base"
             />
-            <span class="ml-2.5 text-sm text-gray-600 dark:text-gray-300"
-              >{{ $t('system.profile.card.last_login') }}:
+            <span class="ml-2.5 text-sm text-gray-600 dark:text-gray-300">{{ $t('system.profile.card.last_login') }}:
               {{
                 formatTime(userInfo?.last_login_time || userInfo?.login_time) ||
                 $t('system.profile.card.unknown')
-              }}</span
-            >
+              }}</span>
           </div>
         </div>
       </div>
@@ -237,7 +232,7 @@ function handleAvatarSuccess(newUrl: string) {
   width: 80px;
   height: 80px;
   overflow: hidden;
-  background: var(--el-bg-color-overlay);
+  background: #fff;
   border-radius: 50%;
 }
 </style>

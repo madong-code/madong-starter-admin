@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ActionItem } from '#/components/crud/components/types';
+
 import { ref } from 'vue';
 
 import { ElMessage } from 'element-plus';
@@ -20,7 +22,7 @@ const [BasicCrud, crudApi] = useCrud({
       label: '执行',
       type: 'primary',
       icon: 'ant-design:right-circle-outlined',
-      ifShow: (_action: any, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 1;
       },
       sort: 1020,
@@ -38,8 +40,8 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       link: true,
       icon: 'ant-design:play-circle-outlined',
-      auth: 'crontab:task:resume',
-      ifShow: (_action: any, record: any) => {
+      auth: 'crontab:task:start',
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 0;
       },
       onClick: async (_e: Event, row: any) => {
@@ -54,7 +56,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: 'ant-design:close-circle-outlined',
       link: true,
-      ifShow: (_action: any, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 0;
       },
       auth: 'crontab:task:resume',
@@ -70,7 +72,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: 'ant-design:pause-circle-outlined',
       link: true,
-      ifShow: (_action: any, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 1;
       },
       auth: 'crontab:task:pause',
@@ -86,7 +88,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: 'ant-design:info-circle-outlined',
       link: true,
-      auth: 'crontab:log:list',
+      auth: 'crontab:task:logs',
       onClick: (_e: Event, row: any) => {
         crontabLogsWrapRef.value.show(row);
       },

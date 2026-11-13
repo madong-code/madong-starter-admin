@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { ReviewRow } from '#/api/content/review/record/types';
-import type { CrudSchema } from '#/components/crud/components/types';
 
 import { ref } from 'vue';
 
@@ -13,12 +12,12 @@ import { useCrudSchema } from './schemas';
 
 const recordDetailRef = ref<InstanceType<typeof RecordDetail>>();
 
-const schema: CrudSchema = {
+const schema = {
   ...useCrudSchema(),
   tableActions: [
     {
       label: $t('content.review.record.actions.detail'),
-      type: 'primary',
+      type: 'primary' as const,
       link: true,
       auth: 'content:review:record:read',
       onClick: (_e: MouseEvent, _row: ReviewRow) => {

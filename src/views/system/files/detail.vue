@@ -63,14 +63,6 @@ const spaceText = computed(() =>
     : $t('system.files.detail.space_public'),
 );
 
-/** 来源：default=系统，plugin:{code}=插件归属 */
-const sourceText = computed(() => {
-  const source = String(detail.value?.source ?? 'default');
-  return source.startsWith('plugin:')
-    ? $t('system.files.detail.source_plugin', [source.slice(7)])
-    : $t('system.files.detail.source_default');
-});
-
 async function handleCopy() {
   if (!accessUrl.value) {
     return;
@@ -137,9 +129,6 @@ function handleOpen() {
           <ElTag :type="isPrivate ? 'warning' : 'success'" size="small">
             {{ spaceText }}
           </ElTag>
-        </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('system.files.detail.source')">
-          {{ sourceText }}
         </ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('system.files.detail.created_name')">
           {{ detail?.createds?.created_name || '-' }}

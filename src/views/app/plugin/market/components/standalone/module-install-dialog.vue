@@ -44,7 +44,7 @@ let sseConn: null | { close: () => void } = null;
 
 const openDialog = async () => {
   if (!props.plugin?.name && !props.plugin?.code) {
-    ElMessage.error($t('app.plugin.market.invalid_env_check'));
+    ElMessage.error('模块信息不完整，无法进行环境检测');
     return;
   }
   dialogApi.open();
@@ -69,9 +69,7 @@ const loadEnvironmentChecks = async () => {
     environmentChecks.value = response?.paths
       ? response.paths.map((item: any) => ({
           path: item.path,
-          requirement: item.requirement === 'readable'
-            ? $t('app.plugin.market.standalone.install.readable')
-            : $t('app.plugin.market.standalone.install.writable'),
+          requirement: item.requirement === 'readable' ? '可读' : '可写',
           status: item.status,
         }))
       : [];
@@ -99,7 +97,7 @@ const scrollToBottom = () => {
 const startInstallation = async () => {
   currentStep.value = 2;
   installationProgress.value = 0;
-  installationLogs.value = [$t('app.plugin.market.standalone.install.log_start')];
+  installationLogs.value = ['开始安装...'];
   await startSseInstallation();
 };
 
@@ -136,11 +134,7 @@ const startSseInstallation = async () => {
       // warning 处理器：插件已安装等提示信息
       const eventData = payload?.data || payload;
       if (eventData.message) {
-        installationLogs.value.push(
-          $t('app.plugin.market.standalone.install.log_warn_prefix', {
-            msg: eventData.message,
-          }),
-        );
+        installationLogs.value.push(`警告: ${eventData.message}`);
         scrollToBottom();
       }
       installationStatus.value = 'warning';
@@ -153,11 +147,7 @@ const startSseInstallation = async () => {
       // error 处理器仅在服务器主动发送 event: error 时触发（连接关闭不会触发此处理器）
       const eventData = payload?.data || payload;
       if (eventData.message) {
-        installationLogs.value.push(
-          $t('app.plugin.market.standalone.install.log_error_prefix', {
-            msg: eventData.message,
-          }),
-        );
+        installationLogs.value.push(`错误: ${eventData.message}`);
         installationStatus.value = 'exception';
         currentStep.value = 3;
         installationResult.value = 'error';
@@ -169,9 +159,7 @@ const startSseInstallation = async () => {
       // onError 仅在连接意外断开时触发（没有收到服务器 error 事件）
       // 如果已完成就不覆盖成功状态
       if (currentStep.value < 3) {
-        installationLogs.value.push(
-          $t('app.plugin.market.standalone.install.sse_error'),
-        );
+        installationLogs.value.push('SSE连接错误');
         installationStatus.value = 'exception';
         currentStep.value = 3;
         installationResult.value = 'error';
@@ -198,7 +186,7 @@ const handleRefresh = () => {
 const handleRetry = () => {
   currentStep.value = 2;
   installationProgress.value = 0;
-  installationLogs.value = [$t('app.plugin.market.standalone.install.log_retry')];
+  installationLogs.value = ['开始重新安装...'];
   installationStatus.value = '';
   installationResult.value = 'success';
   startSseInstallation();

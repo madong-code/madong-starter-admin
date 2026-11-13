@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { LOGIN_PATH } from '#/core/shared/constants';
 import { AuthenticationQrCodeLogin } from '#/core/ui/common';
+import { LOGIN_PATH } from '#/core/shared/constants';
 
 defineOptions({ name: 'QrCodeLogin' });
 </script>

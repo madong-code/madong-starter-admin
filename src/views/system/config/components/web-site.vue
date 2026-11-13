@@ -10,8 +10,7 @@ import { $t } from '#/locales';
 
 const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,
-  commonConfig: { labelWidth: 120 },
-  wrapperClass: 'grid-cols-1 gap-x-6 gap-y-1 lg:grid-cols-2',
+  commonConfig: { labelWidth: 130 },
   schema: [
     {
       fieldName: 'web_open',

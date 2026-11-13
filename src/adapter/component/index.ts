@@ -21,43 +21,128 @@ import type {
 
 import type { Component } from 'vue';
 
-import type { Recordable } from '#/core/shared/types';
 import type {
   ApiComponentSharedProps,
   BaseFormComponentType,
   IconPickerProps,
 } from '#/core/ui/common';
+import type { Recordable } from '#/core/shared/types';
 
 import { defineAsyncComponent, defineComponent, h, ref } from 'vue';
 
-import { ElNotification } from 'element-plus';
-
-import { $t } from '#/core/locales';
 import { globalShareState } from '#/core/ui/common';
+import { $t } from '#/core/locales';
+
+import { ElNotification } from 'element-plus';
 
 import { getAll as getFormComponents } from '../../components/form/component-map';
 
 type ElTreeSelectSchemaProps = InstanceType<typeof ElTreeSelectType>['$props'];
 type ElTimePickerSchemaProps = InstanceType<typeof ElTimePickerType>['$props'];
 
-const ElDatePicker = defineAsyncComponent(() =>
+export const ElButton = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/button/index'),
+    import('element-plus/es/components/button/style/css'),
+  ]).then(([res]) => res.ElButton),
+);
+export const ElCheckbox = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/checkbox/index'),
+    import('element-plus/es/components/checkbox/style/css'),
+  ]).then(([res]) => res.ElCheckbox),
+);
+export const ElCheckboxButton = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/checkbox/index'),
+    import('element-plus/es/components/checkbox-button/style/css'),
+  ]).then(([res]) => res.ElCheckboxButton),
+);
+export const ElCheckboxGroup = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/checkbox/index'),
+    import('element-plus/es/components/checkbox-group/style/css'),
+  ]).then(([res]) => res.ElCheckboxGroup),
+);
+export const ElDatePicker = defineAsyncComponent(() =>
   Promise.all([
     import('element-plus/es/components/date-picker/index'),
     import('element-plus/es/components/date-picker/style/css'),
   ]).then(([res]) => res.ElDatePicker),
 );
-const ElInput = defineAsyncComponent(() =>
+export const ElDivider = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/divider/index'),
+    import('element-plus/es/components/divider/style/css'),
+  ]).then(([res]) => res.ElDivider),
+);
+export const ElInput = defineAsyncComponent(() =>
   Promise.all([
     import('element-plus/es/components/input/index'),
     import('element-plus/es/components/input/style/css'),
   ]).then(([res]) => res.ElInput),
 );
-const ElInputNumber = defineAsyncComponent(() =>
+export const ElInputNumber = defineAsyncComponent(() =>
   Promise.all([
     import('element-plus/es/components/input-number/index'),
     import('element-plus/es/components/input-number/style/css'),
   ]).then(([res]) => res.ElInputNumber),
 );
+export const ElRadio = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/radio/index'),
+    import('element-plus/es/components/radio/style/css'),
+  ]).then(([res]) => res.ElRadio),
+);
+export const ElRadioButton = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/radio/index'),
+    import('element-plus/es/components/radio-button/style/css'),
+  ]).then(([res]) => res.ElRadioButton),
+);
+export const ElRadioGroup = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/radio/index'),
+    import('element-plus/es/components/radio-group/style/css'),
+  ]).then(([res]) => res.ElRadioGroup),
+);
+export const ElSelectV2 = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/select-v2/index'),
+    import('element-plus/es/components/select-v2/style/css'),
+  ]).then(([res]) => res.ElSelectV2),
+);
+export const ElSpace = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/space/index'),
+    import('element-plus/es/components/space/style/css'),
+  ]).then(([res]) => res.ElSpace),
+);
+export const ElSwitch = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/switch/index'),
+    import('element-plus/es/components/switch/style/css'),
+  ]).then(([res]) => res.ElSwitch),
+);
+export const ElTimePicker = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/time-picker/index'),
+    import('element-plus/es/components/time-picker/style/css'),
+  ]).then(([res]) => res.ElTimePicker),
+);
+export const ElTreeSelect = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/tree-select/index'),
+    import('element-plus/es/components/tree-select/style/css'),
+  ]).then(([res]) => res.ElTreeSelect),
+);
+export const ElUpload = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/upload/index'),
+    import('element-plus/es/components/upload/style/css'),
+  ]).then(([res]) => res.ElUpload),
+);
+
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
   type: 'input' | 'select',
@@ -106,14 +191,12 @@ export type ComponentType =
   | 'DatePicker'
   | 'Divider'
   | 'Editor'
-  | 'EntitySelector'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
   | 'KeyValueEditor'
   | 'Password'
   | 'RadioGroup'
-  | 'ReposEditor'
   | 'Select'
   | 'Space'
   | 'Switch'
@@ -139,13 +222,11 @@ export interface ComponentPropsMap {
   DatePicker: DatePickerProps;
   Divider: DividerProps;
   Editor: Record<string, any>;
-  EntitySelector: Record<string, any>;
   IconPicker: IconPickerProps;
   Input: InputProps;
   InputNumber: InputNumberProps;
   Password: Record<string, any>;
   RadioGroup: RadioGroupProps;
-  ReposEditor: Record<string, any>;
   Select: SelectV2Props;
   Space: SpaceProps;
   Switch: SwitchProps;

@@ -36,7 +36,7 @@ const displayLabel = computed(() => {
   }
   if (Array.isArray(props.value)) {
     const labels = props.value.map((val) => {
-      const option = allOptions.find((opt) => opt.value === val);
+      const option = allOptions!.find((opt) => opt.value === val);
       return option ? option.label : val;
     });
     return labels.join(', ');

@@ -3,6 +3,8 @@ import type { FormInstance, FormRules } from 'element-plus';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 
+import { useUserStore } from '#/core/stores';
+
 import {
   ElButton,
   ElCol,
@@ -23,7 +25,6 @@ import defaultAvatar from '#/assets/images/avatar/default-avatar.webp';
 import { Avatar } from '#/components/form';
 import Icon from '#/components/icon/index.vue';
 import { Page } from '#/components/page';
-import { useUserStore } from '#/core/stores';
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 
@@ -33,7 +34,7 @@ defineOptions({ name: 'UserCenter' });
 
 const userStore = useUserStore();
 const userInfo = computed<Record<string, any>>(
-  () => (userStore.userInfo as null | Record<string, any>) ?? {},
+  () => (userStore.userInfo as any) || {},
 );
 
 // 格式化部门信息（从 depts 数组中获取 name）
@@ -50,8 +51,7 @@ const handleAvatarUpdate = (_newAvatarUrl: string) => {
 // 头像上传成功回调
 const handleAvatarSuccess = async (avatarUrl: string) => {
   try {
-    // 调用专用头像更新接口
-    await ProfileService.updateAvatar({ avatar: avatarUrl });
+    // 头像已由 Avatar 组件通过 ProfileService.uploadAvatarFile 上传并落库
 
     // 更新本地 store 中的用户头像
     const currentUser = userStore.userInfo;
@@ -292,8 +292,23 @@ const handlePwdEdit = async () => {
 
 const [BasicCrud, crudApi] = useCrud({
   ...useCrudSchema(),
-  // 左侧工具栏（在线设备列表无删除接口，仅支持下线）
-  toolbarActions: [],
+  // 左侧工具栏
+  toolbarActions: [
+    {
+      label: $t('system.files.list.table.columns.actions.delete.label'),
+      type: 'danger',
+      icon: 'ant-design:delete-outlined',
+      auth: 'system:files:delete',
+      ifShow: () => crudApi.getReadonlyState().selection.length > 0,
+      confirm: {
+        title: $t('system.files.list.table.columns.actions.delete.title'),
+        content: $t('system.files.list.table.columns.actions.delete.confirm'),
+        ok() {
+          crudApi.removeByApi({});
+        },
+      },
+    },
+  ],
   // 左侧栏工具-下拉菜单
   dropDownToolbarActions: [],
   // 表格行操作
@@ -313,9 +328,11 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
   ],
-  toolbarConfig: {
-    fullscreen: false,
-  },
+  ...({
+    toolbarConfig: {
+      fullscreen: false,
+    },
+  } as any),
   tableActionColumn: {
     fixed: false,
     width: 120,

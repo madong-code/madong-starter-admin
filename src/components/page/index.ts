@@ -1,1 +1,1 @@
-export { Page } from '#/core/ui/common';
+export { Page } from '#/core/ui/common'

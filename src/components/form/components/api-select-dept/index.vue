@@ -78,7 +78,7 @@ const selectValue = computed({
   get() {
     const v = props.modelValue;
     if (props.multiple)
-      return Array.isArray(v) ? v : v ? String(v).split(',') : [];
+      return Array.isArray(v) ? v : (v ? String(v).split(',') : []);
     return v;
   },
   set(val: any) {

@@ -3,29 +3,31 @@
  * 重新导出自 components/types.ts
  */
 
-// 兼容旧版导出（可选）
-export type { VbenFormSchema } from '#/adapter/form';
-
 // 从 components 重新导出所有类型
 export type {
   // 基础类型
   ActionItem,
+  PopConfirm,
+  CrudColumn,
   CrudApi,
   CrudApiInstance,
-  CrudColumn,
   CrudReadonlyState,
-  // Schema
-  CrudSchema,
-  FormActionType,
-  FormDialogApiConfig,
-  FormDialogCommonConfig,
-  FormDialogConfig,
-  FormDialogOptions,
-  FormDialogType,
   PaginationConfig,
-  PopConfirm,
+  TreeConfig,
+  ToolbarConfig,
+
   // 新配置类型
   SearchFormConfig,
-  ToolbarConfig,
-  TreeConfig,
-} from './components/types';
+  FormDialogConfig,
+  FormDialogCommonConfig,
+  FormDialogType,
+  FormActionType,
+  FormDialogApiConfig,
+  FormDialogOptions,
+
+  // Schema
+  CrudSchema,
+} from './components/types'
+
+// 兼容旧版导出（可选）
+export type { VbenFormSchema } from '#/adapter/form'

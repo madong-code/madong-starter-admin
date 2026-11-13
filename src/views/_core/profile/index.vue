@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useUserStore } from '#/core/stores';
+
 import { ElMessage } from 'element-plus';
 
 import { Page } from '#/components/page';
-import { useUserStore } from '#/core/stores';
 import { $t } from '#/locales';
 
 import BaseSetting from './components/base-setting.vue';

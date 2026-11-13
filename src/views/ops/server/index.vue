@@ -29,11 +29,6 @@ const customColors = [
   { color: '#E6A23C', percentage: 100 },
 ];
 
-const toNumber = (value) => {
-  const number = Number.parseFloat(String(value ?? 0));
-  return Number.isFinite(number) ? number : 0;
-};
-
 // 获取服务器数据
 const loadServerData = async () => {
   try {
@@ -62,7 +57,7 @@ onMounted(() => {
 
       <div class="metric-container">
         <ElStatistic
-          :value="toNumber(serverData.cpu?.cpu_usage_percentage)"
+          :value="serverData.cpu?.cpu_usage_percentage || '0'"
           :title="serverData.cpu?.cpu_name || '未知CPU'"
           class="mb-20"
         >
@@ -72,7 +67,7 @@ onMounted(() => {
         </ElStatistic>
 
         <ElProgress
-          :percentage="toNumber(serverData.cpu?.cpu_usage_percentage)"
+          :percentage="parseFloat(serverData.cpu?.cpu_usage_percentage || 0)"
           :stroke-width="18"
           :color="customColors"
           :show-text="false"
@@ -106,7 +101,7 @@ onMounted(() => {
 
       <div class="metric-container">
         <ElStatistic
-          :value="toNumber(serverData.memory?.memory_usage_rate)"
+          :value="serverData.memory?.memory_usage_rate || '0'"
           title="内存使用率"
           class="mb-20"
         >
@@ -116,7 +111,7 @@ onMounted(() => {
         </ElStatistic>
 
         <ElProgress
-          :percentage="toNumber(serverData.memory?.memory_usage_rate)"
+          :percentage="parseFloat(serverData.memory?.memory_usage_rate || 0)"
           :stroke-width="18"
           :color="customColors"
           :show-text="false"
@@ -363,7 +358,7 @@ onMounted(() => {
   max-height: 120px;
   padding: 8px;
   overflow-y: auto;
-  background: var(--el-fill-color-light);
+  background: #f5f7fa;
   border-radius: 4px;
 }
 

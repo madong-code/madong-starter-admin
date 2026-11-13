@@ -5,4 +5,4 @@
  * @author Madong Team
  */
 
-export * from './links';
+export * from './links'

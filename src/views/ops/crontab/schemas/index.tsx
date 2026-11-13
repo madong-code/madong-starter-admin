@@ -112,6 +112,19 @@ export const useCrudSchema = (): CrudSchema => {
         },
       },
       {
+        field: 'tenant_id',
+        title: $t('ops.crontab.table.columns.tenant_id'),
+        minWidth: 120,
+        align: 'left',
+        visible: false,
+        // 关联租户对象：有则显示租户名称，无（全局任务 tenant=null）显示 -
+        vxeColumn: {
+          slots: {
+            default: ({ row }: { row: any }) => row?.tenant?.name ?? '-',
+          },
+        },
+      },
+      {
         field: 'last_running_time',
         title: $t('ops.crontab.table.columns.last_running_time'),
         minWidth: 140,

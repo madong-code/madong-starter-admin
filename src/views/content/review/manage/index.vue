@@ -22,26 +22,28 @@ async function promptReason(
   inputPlaceholder = '',
   required = true,
 ): Promise<null | string> {
-  try {
-    const { value } = await ElMessageBox.prompt(
-      title,
-      $t('content.review.manage.title'),
-      {
-        confirmButtonText: $t('common.confirm'),
-        cancelButtonText: $t('common.cancel'),
-        inputType: 'textarea',
-        inputPlaceholder,
-        inputValidator: (val) => {
-          if (required && (!val || !val.trim())) {
-            return $t('content.review.manage.message.reject_required');
-          }
-          return true;
+  while (true) {
+    try {
+      const { value } = await ElMessageBox.prompt(
+        title,
+        $t('content.review.manage.title'),
+        {
+          confirmButtonText: $t('common.confirm'),
+          cancelButtonText: $t('common.cancel'),
+          inputType: 'textarea',
+          inputPlaceholder,
+          inputValidator: (val) => {
+            if (required && (!val || !val.trim())) {
+              return $t('content.review.manage.message.reject_required');
+            }
+            return true;
+          },
         },
-      },
-    );
-    return value ?? '';
-  } catch {
-    return null;
+      );
+      return value ?? '';
+    } catch {
+      return null;
+    }
   }
 }
 

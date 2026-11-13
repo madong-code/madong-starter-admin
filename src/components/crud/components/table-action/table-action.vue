@@ -5,6 +5,9 @@ import type { ActionItem, PopConfirm } from './types';
 
 import { computed, h, reactive, toRaw } from 'vue';
 
+import { useAccess } from '#/core/access';
+import { isBoolean, isFunction } from '#/core/shared';
+
 import {
   ElButton,
   ElDropdown,
@@ -16,8 +19,6 @@ import {
 } from 'element-plus';
 
 import { Icon } from '#/components/icon';
-import { useAccess } from '#/core/access';
-import { isBoolean, isFunction } from '#/core/shared';
 import { $t } from '#/locales';
 
 const props = defineProps({
@@ -79,31 +80,6 @@ function isIfShow(action: ActionItem): boolean {
   return isIfShow;
 }
 
-/** 权限不足时的处理：authMode=disable 渲染禁用按钮（操作栏对齐），否则隐藏 */
-function filterByAuth(actions: ActionItem[]): ActionItem[] {
-  return actions.filter((action) => {
-    if (!isIfShow(action)) {
-      return false;
-    }
-    if (hasAccess(action.auth)) {
-      return true;
-    }
-    return action.authMode === 'disable';
-  });
-}
-
-/** 禁用注入：无权限且 authMode=disable 的按钮补 disabled，点击/弹窗一律不响应 */
-function applyAuthDisabled(actions: any[]): any[] {
-  return actions.map((action) => {
-    if (action.disabled) {
-      return action;
-    }
-    return hasAccess(action.auth)
-      ? action
-      : { ...action, disabled: true, popConfirm: undefined, confirm: undefined };
-  });
-}
-
 const wrapConfirm = (action: ActionItem) => {
   const newAction = { ...action };
 
@@ -126,9 +102,6 @@ const wrapConfirm = (action: ActionItem) => {
         .then(() => {
           if (ok && typeof ok === 'function') {
             ok(props.record);
-          } else if (typeof options.confirm === 'function') {
-            // 新版回调：confirm(e?, record?)，无事件来源时 e 传 undefined
-            options.confirm(undefined, props.record);
           }
         })
         .catch(() => {
@@ -169,63 +142,65 @@ const wrapConfirm = (action: ActionItem) => {
 };
 
 const getActions = computed(() => {
-  return applyAuthDisabled(
-    filterByAuth(toRaw(props.actions) || [])
-      .toSorted((a, b) => (a.sort || 1000) - (b.sort || 1000))
-      .map((action) => {
-        let processedAction = wrapConfirm(action);
-        if (
-          processedAction.dynamicProps &&
-          isFunction(processedAction.dynamicProps)
-        ) {
-          processedAction = {
-            ...processedAction,
-            ...processedAction.dynamicProps(props.record || {}),
-          };
-        }
-        const { popConfirm } = processedAction;
-        const icon = processedAction.icon
-          ? renderIcon(processedAction.icon)
-          : undefined;
-        return {
+  return (toRaw(props.actions) || [])
+    .filter((action) => {
+      return hasAccess(action.auth) && isIfShow(action);
+    })
+    .toSorted((a, b) => (a.sort || 1000) - (b.sort || 1000))
+    .map((action) => {
+      let processedAction = wrapConfirm(action);
+      if (
+        processedAction.dynamicProps &&
+        isFunction(processedAction.dynamicProps)
+      ) {
+        processedAction = {
           ...processedAction,
-          ...popConfirm,
-          icon,
-          onConfirm: popConfirm?.confirm,
-          onCancel: popConfirm?.cancel,
-          enable: !!popConfirm,
+          ...processedAction.dynamicProps(props.record || {}),
         };
-      }),
-  );
+      }
+      const { popConfirm } = processedAction;
+      const icon = processedAction.icon
+        ? renderIcon(processedAction.icon)
+        : undefined;
+      return {
+        ...processedAction,
+        ...popConfirm,
+        icon,
+        onConfirm: popConfirm?.confirm,
+        onCancel: popConfirm?.cancel,
+        enable: !!popConfirm,
+      };
+    });
 });
 
 const getDropdownList = computed((): any[] => {
-  return applyAuthDisabled(
-    filterByAuth(toRaw(props.dropDownActions) || [])
-      .toSorted((a, b) => (a.sort || 1000) - (b.sort || 1000))
-      .map((action, index) => {
-        let processedAction = wrapConfirm(action);
-        if (
-          processedAction.dynamicProps &&
-          isFunction(processedAction.dynamicProps)
-        ) {
-          processedAction = {
-            ...processedAction,
-            ...processedAction.dynamicProps(props.record || {}),
-          };
-        }
-        const { label, popConfirm } = processedAction;
-        return {
+  return (toRaw(props.dropDownActions) || [])
+    .filter((action) => {
+      return hasAccess(action.auth) && isIfShow(action);
+    })
+    .toSorted((a, b) => (a.sort || 1000) - (b.sort || 1000))
+    .map((action, index) => {
+      let processedAction = wrapConfirm(action);
+      if (
+        processedAction.dynamicProps &&
+        isFunction(processedAction.dynamicProps)
+      ) {
+        processedAction = {
           ...processedAction,
-          ...popConfirm,
-          onConfirm: popConfirm?.confirm,
-          onCancel: popConfirm?.cancel,
-          text: label,
-          divider:
-            index < props.dropDownActions.length - 1 ? props.divider : false,
+          ...processedAction.dynamicProps(props.record || {}),
         };
-      }),
-  );
+      }
+      const { label, popConfirm } = processedAction;
+      return {
+        ...processedAction,
+        ...popConfirm,
+        onConfirm: popConfirm?.confirm,
+        onCancel: popConfirm?.cancel,
+        text: label,
+        divider:
+          index < props.dropDownActions.length - 1 ? props.divider : false,
+      };
+    });
 });
 
 const getPopConfirmProps = (attrs: PopConfirm) => {
@@ -248,7 +223,7 @@ const getPopConfirmProps = (attrs: PopConfirm) => {
   return originAttrs;
 };
 
-const getButtonProps = (action: any): any => {
+const getButtonProps = (action: ActionItem): any => {
   const onClick = action.onClick;
   const res: any = { ...action };
   if (onClick) {
@@ -287,12 +262,12 @@ const handleRef = (e: any, index: number) => {
           v-bind="getPopConfirmProps(action.popConfirm)"
         >
           <template #reference>
-            <ElButton v-bind="getButtonProps(action)">
+            <ElButton v-bind="getButtonProps(action as any)">
               {{ action.label }}
             </ElButton>
           </template>
         </ElPopconfirm>
-        <ElButton v-else v-bind="getButtonProps(action)">
+        <ElButton v-else v-bind="getButtonProps(action as any)">
           {{ action.label }}
         </ElButton>
       </template>

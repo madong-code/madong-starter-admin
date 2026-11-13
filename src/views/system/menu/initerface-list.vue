@@ -228,15 +228,11 @@ defineExpose({
                 </div>
                 <div class="card-body">
                   <div class="route-item">
-                    <span class="label"
-                      >{{ $t('system.menu.api.route_info.path') }}：</span
-                    >
+                    <span class="label">{{ $t('system.menu.api.route_info.path') }}：</span>
                     <code class="val">{{ item.path }}</code>
                   </div>
                   <div v-if="item.code" class="route-item">
-                    <span class="label"
-                      >{{ $t('system.menu.api.route_info.code') }}：</span
-                    >
+                    <span class="label">{{ $t('system.menu.api.route_info.code') }}：</span>
                     <span class="val">{{ item.code }}</span>
                   </div>
                 </div>

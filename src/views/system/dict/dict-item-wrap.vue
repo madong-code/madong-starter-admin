@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+import { useVbenDrawer } from '#/core/ui/common';
+
 import { useCrud } from '#/adapter/crud';
 import { Page } from '#/components/page';
-import { useVbenDrawer } from '#/core/ui/common';
 import { $t } from '#/locales';
 
 import { useCrudSchema } from '../dict-item/schemas';

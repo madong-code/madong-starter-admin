@@ -6,7 +6,7 @@ const props = withDefaults(
     data?: Record<string, any>;
     fieldName?: string;
     schema?: any;
-    value?: null | string | undefined | { name: string; url: string }[];
+    value?: null | string | undefined | { name: string; url: string; }[];
   }>(),
   {},
 );

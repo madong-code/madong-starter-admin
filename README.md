@@ -2,9 +2,9 @@
 
 <img src="https://raw.githubusercontent.com/madong-code/madong-admin/main/public/logo.png" alt="Madong Logo" width="120" />
 
-# MaDong Admin
+# Madong Starter Admin
 
-基于 Vue Vben Admin `v5.7.0` 重构、面向 **MaDong 5.1+ 后端** 适配的管理后台前端
+基于 [madong-single](https://github.com/madong-code/madong-single) 基座构建的 **租户管理后台 starter**，应用层代码源自 madong-mono `apps/admin` 模板。
 
 [![Vue](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)](https://vuejs.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev)

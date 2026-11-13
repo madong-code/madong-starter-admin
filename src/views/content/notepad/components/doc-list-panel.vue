@@ -27,7 +27,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'select', doc: NotepadDocument | null): void;
+  (e: 'select', doc: NotepadDocument): void;
   (e: 'refresh'): void;
 }>();
 
@@ -151,7 +151,7 @@ async function handleDelete(doc: NotepadDocument) {
     await NotepadService.deleteDocument(doc.id);
     if (activeDocId.value === doc.id) {
       activeDocId.value = '';
-      emit('select', null);
+      emit('select' as any, null as any);
     }
     await loadDocuments();
     emit('refresh');

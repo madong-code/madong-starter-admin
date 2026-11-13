@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 
+// eslint-disable-next-line n/no-extraneous-import
 import * as echarts from 'echarts';
 import {
   ElCard,

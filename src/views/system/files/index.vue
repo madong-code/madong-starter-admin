@@ -10,15 +10,9 @@ import FileDetail from './detail.vue';
 import { useCrudSchema } from './schemas';
 import FileUpload from './upload.vue';
 
-// schema 内的自定义动作需要在运行时取到 crudApi（刷新列表 / 清空勾选），
-// 而 crudApi 由 useCrud 返回，故通过闭包延迟注入
 let crudApiInstance: CrudApiInstance | undefined;
-
-/** 文件详情抽屉 */
 const detailVisible = ref(false);
 const detailRow = ref<null | Record<string, any>>(null);
-
-/** 上传弹窗 */
 const uploadVisible = ref(false);
 
 function openDetail(row: Record<string, any>) {
@@ -38,6 +32,7 @@ const [BasicCrud, crudApi] = useCrud(
 );
 crudApiInstance = crudApi;
 </script>
+
 <template>
   <Page auto-content-height>
     <BasicCrud />

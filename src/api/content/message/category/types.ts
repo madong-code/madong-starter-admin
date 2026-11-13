@@ -11,6 +11,7 @@ export interface MessageCategory {
   is_show?: boolean;
   is_system?: boolean;
   is_enabled?: boolean;
+  tenant_id?: null | string;
   created_at?: null | string;
   updated_at?: null | string;
 }

@@ -370,7 +370,7 @@ const handleToolCommand = (command: string) => {
 .gt-name {
   font-size: 13px;
   font-weight: 500;
-  color: var(--el-text-color-primary);
+  color: #333;
 }
 
 .footer-tools {

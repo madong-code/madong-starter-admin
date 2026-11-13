@@ -1,7 +1,4 @@
-import type {
-  RouteRecordRaw,
-  RouteRecordStringComponent,
-} from '#/core/shared/types';
+import type { RouteRecordRaw, RouteRecordStringComponent } from '#/core/shared/types';
 
 import { mergeRouteModules, traverseTreeValues } from '#/core/shared';
 

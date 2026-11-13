@@ -40,7 +40,7 @@ src/
 // locales/langs/zh-CN/page.json
 {
   "auth": { "login": "登录" },
-  "dashboard": { "title": "概览" },
+  "dashboard": { "title": "概览" }
 }
 ```
 
@@ -50,7 +50,7 @@ src/
 // locales/langs/zh-CN/demos.json
 {
   "title": "演示",
-  "localeTest": { "title": "语言包测试" },
+  "localeTest": { "title": "语言包测试" }
 }
 ```
 
@@ -64,7 +64,7 @@ src/
 // lang/zh-CN/common.json
 {
   "button": { "confirm": "确认" },
-  "message": { "success": "操作成功" },
+  "message": { "success": "操作成功" }
 }
 ```
 
@@ -86,7 +86,7 @@ lang/zh-CN/test.ss.json
 // plugins/test/lang/zh-CN/demo.json
 {
   "greeting": "你好！欢迎使用插件语言包测试",
-  "menu": { "home": "首页" },
+  "menu": { "home": "首页" }
 }
 ```
 
@@ -100,11 +100,11 @@ plugins/test/lang/zh-CN/menu.json
 
 ## Key 规则汇总
 
-| 目录              | Key 格式                | 示例                          |
-| ----------------- | ----------------------- | ----------------------------- |
-| `locales/langs/`  | `文件名.层级key`        | `$t('page.auth.login')`       |
-| `lang/`           | `文件名.层级key`        | `$t('common.button.confirm')` |
-| `plugins/*/lang/` | `插件名.文件名.层级key` | `$t('test.demo.greeting')`    |
+| 目录 | Key 格式 | 示例 |
+|------|----------|------|
+| `locales/langs/` | `文件名.层级key` | `$t('page.auth.login')` |
+| `lang/` | `文件名.层级key` | `$t('common.button.confirm')` |
+| `plugins/*/lang/` | `插件名.文件名.层级key` | `$t('test.demo.greeting')` |
 
 ## 加载顺序
 
@@ -122,7 +122,7 @@ plugins/test/lang/zh-CN/menu.json
 
 ## 语言目录映射
 
-| 输入                                 | 映射到  |
-| ------------------------------------ | ------- |
+| 输入 | 映射到 |
+|------|--------|
 | `zh` / `zh-CN` / `zh_CN` / `zh-Hans` | `zh-CN` |
-| `en` / `en-US` / `en_US` / `en-GB`   | `en-US` |
+| `en` / `en-US` / `en_US` / `en-GB` | `en-US` |

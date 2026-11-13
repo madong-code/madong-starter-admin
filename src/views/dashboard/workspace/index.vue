@@ -9,9 +9,6 @@ import type {
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { preferences } from '#/core/preferences';
-import { openWindow } from '#/core/shared';
-import { useUserStore } from '#/core/stores';
 import {
   AnalysisChartCard,
   WorkbenchHeader,
@@ -20,6 +17,9 @@ import {
   WorkbenchTodo,
   WorkbenchTrends,
 } from '#/core/ui/common';
+import { preferences } from '#/core/preferences';
+import { useUserStore } from '#/core/stores';
+import { openWindow } from '#/core/shared';
 
 import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
 

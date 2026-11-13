@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
 
+import { useElementPlusDesignTokens } from '#/core/composables';
+
 import { ElConfigProvider } from 'element-plus';
 
-import { useElementPlusDesignTokens } from '#/core/composables';
 import { elementLocale } from '#/locales';
 import { useSiteConfigStore } from '#/store/modules/site-config';
 

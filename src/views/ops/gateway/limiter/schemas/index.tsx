@@ -97,7 +97,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('ops.gateway.limiter.table.search.name'),
           componentProps: {
             placeholder: $t(
-              'ops.gateway.limiter.table.search.placeholder.name',
+              'setting.gateway.limiter.table.search.placeholder.name',
             ),
             clearable: true,
           },
@@ -108,7 +108,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('ops.gateway.limiter.table.search.path'),
           componentProps: {
             placeholder: $t(
-              'ops.gateway.limiter.table.search.placeholder.path',
+              'setting.gateway.limiter.table.search.placeholder.path',
             ),
             clearable: true,
           },
@@ -121,7 +121,7 @@ export const useCrudSchema = (): CrudSchema => {
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
             placeholder: $t(
-              'ops.gateway.limiter.table.search.placeholder.enabled',
+              'setting.gateway.limiter.table.search.placeholder.enabled',
             ),
           },
         },
@@ -144,7 +144,9 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('ops.gateway.limiter.form.modal.placeholder.name'),
+            placeholder: $t(
+              'setting.gateway.limiter.form.modal.placeholder.name',
+            ),
             clearable: true,
           },
         },
@@ -157,7 +159,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             placeholder: $t(
-              'ops.gateway.limiter.form.modal.placeholder.match_type',
+              'setting.gateway.limiter.form.modal.placeholder.match_type',
             ),
             clearable: true,
             options: [
@@ -176,7 +178,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             placeholder: $t(
-              'ops.gateway.limiter.form.modal.placeholder.limit_type',
+              'setting.gateway.limiter.form.modal.placeholder.limit_type',
             ),
             clearable: true,
             options: [
@@ -198,7 +200,9 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('ops.gateway.limiter.form.modal.placeholder.path'),
+            placeholder: $t(
+              'setting.gateway.limiter.form.modal.placeholder.path',
+            ),
             clearable: true,
           },
         },
@@ -211,7 +215,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             type: 'number',
             placeholder: $t(
-              'ops.gateway.limiter.form.modal.placeholder.limit_value',
+              'setting.gateway.limiter.form.modal.placeholder.limit_value',
             ),
           },
         },
@@ -226,7 +230,7 @@ export const useCrudSchema = (): CrudSchema => {
             max: 60,
             type: 'number',
             placeholder: $t(
-              'ops.gateway.limiter.form.modal.placeholder.period',
+              'setting.gateway.limiter.form.modal.placeholder.period',
             ),
           },
         },
@@ -239,7 +243,9 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             type: 'number',
-            placeholder: $t('ops.gateway.limiter.form.modal.placeholder.ttl'),
+            placeholder: $t(
+              'setting.gateway.limiter.form.modal.placeholder.ttl',
+            ),
           },
         },
         {
@@ -263,7 +269,7 @@ export const useCrudSchema = (): CrudSchema => {
             type: 'textarea',
             rows: 4,
             placeholder: $t(
-              'ops.gateway.limiter.form.modal.placeholder.message',
+              'setting.gateway.limiter.form.modal.placeholder.message',
             ),
           },
         },

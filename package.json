@@ -1,5 +1,6 @@
 {
-  "name": "vue-vben-admin-ele",
+  "name": "madong-starter-admin",
+  "description": "Madong SaaS tenant admin starter based on madong-single",
   "version": "5.7.1",
   "private": true,
   "browserslist": [

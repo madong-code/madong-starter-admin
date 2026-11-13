@@ -2,19 +2,16 @@ import type { Language } from 'element-plus/es/locale';
 
 import type { App } from 'vue';
 
-import type {
-  LocaleSetupOptions,
-  SupportedLanguagesType,
-} from '#/core/locales';
+import type { LocaleSetupOptions, SupportedLanguagesType } from '#/core/locales';
 
 import { ref } from 'vue';
+
+import { $t, setupI18n as coreSetup } from '#/core/locales';
+import { preferences } from '#/core/preferences';
 
 import dayjs from 'dayjs';
 import enLocale from 'element-plus/es/locale/lang/en';
 import defaultLocale from 'element-plus/es/locale/lang/zh-cn';
-
-import { $t, setupI18n as coreSetup } from '#/core/locales';
-import { preferences } from '#/core/preferences';
 
 import { loadAllLocaleMessages } from './loader';
 

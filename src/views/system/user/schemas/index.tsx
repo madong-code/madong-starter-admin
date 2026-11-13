@@ -1,7 +1,6 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
 import { UserService } from '#/api/system/user';
-import { roleSelectorConfig } from '#/views/system/user/configs/role-selector-config';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
 
@@ -22,10 +21,10 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'system:admin:create',
-      edit: 'system:admin:update',
-      remove: 'system:admin:delete',
-      view: 'system:admin:read',
+      add: 'system:user:create',
+      edit: 'system:user:update',
+      remove: 'system:user:delete',
+      view: 'system:user:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },
@@ -265,77 +264,64 @@ export const useCrudSchema = (): CrudSchema => {
             title: $t('system.user.form.outher_info'),
           },
         },
-        // 所属部门（EntitySelector：部门选择器，多选）
+        // 所属部门
         {
           label: $t('system.user.form.dept_name'),
           fieldName: 'dept_id_list',
-          component: 'EntitySelector',
+          component: 'ApiSelectDept',
           formItemClass: 'col-span-2',
           componentProps: (_values) => {
             return {
-              type: 'dept',
-              selectMode: 'multiple',
+              multiple: true,
             };
           },
         },
-        // 所属岗位（EntitySelector：职位选择器，多选；限定已选部门及其子部门；部门未选时禁用）
+        // 所属岗位
         {
           label: $t('system.user.form.post_name'),
           fieldName: 'post_id_list',
           defaultValue: [],
-          component: 'EntitySelector',
+          component: 'ApiSelectPosition',
           formItemClass: 'col-span-2',
           componentProps: (values) => {
-            const deptIds = values.dept_id_list ?? [];
             return {
-              type: 'post',
-              selectMode: 'multiple',
-              deptIds,
-              disabled: deptIds.length === 0,
-              placeholder: deptIds.length > 0 ? '选择职位' : '请先选择所属部门',
+              deptIds: values.dept_id_list ?? [],
             };
           },
         },
-        // 主要部门（EntitySelector：部门选择器，单选）
+        // 主要部门
         {
           label: $t('system.user.form.main_dept_name'),
           fieldName: 'main_dept_id',
-          component: 'EntitySelector',
+          component: 'ApiSelectDept',
           formItemClass: 'col-span-2',
           componentProps: (_values) => {
             return {
-              type: 'dept',
+              multiple: false,
             };
           },
         },
-        // 主要岗位（EntitySelector：职位选择器，单选；限定主要部门及其子部门；部门未选时禁用）
+        // 主要岗位
         {
           label: $t('system.user.form.main_post_name'),
           fieldName: 'main_post_id',
-          component: 'EntitySelector',
+          component: 'ApiSelectPosition',
           formItemClass: 'col-span-2',
           componentProps: (values) => {
             return {
-              type: 'post',
+              multiple: false,
               deptIds: values.main_dept_id ? [values.main_dept_id] : [],
-              disabled: !values.main_dept_id,
-              placeholder: values.main_dept_id ? '选择职位' : '请先选择主要部门',
             };
           },
         },
 
-        // 所属角色（EntitySelector：角色选择器，多选；传参模式：配置文件整体注入 componentProps.config，
-        // fetcher/hydrate 为字符串 API 路径，组件边界自动归一化，免 registerEntityPickerConfig 预注册）
+        // 所属角色
         {
           label: $t('system.user.form.role_name'),
           fieldName: 'role_id_list',
-          component: 'EntitySelector',
+          component: 'ApiSelectRole',
           formItemClass: 'col-span-2',
-          componentProps: {
-            type: 'role',
-            selectMode: 'multiple',
-            config: roleSelectorConfig,
-          },
+          componentProps: {},
         },
         {
           label: $t('system.user.form.avatar'),

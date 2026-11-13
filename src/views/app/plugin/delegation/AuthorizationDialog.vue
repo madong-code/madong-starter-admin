@@ -51,10 +51,7 @@ const [Dialog, dialogApi] = useDialog({
     try {
       dialogApi.setState({ loading: true, confirmLoading: true });
       const values = await formApi.getValues();
-      await AppPluginDelegationService.setAuthInfo({
-        auth_code: String(values.auth_code),
-        auth_secret: String(values.auth_secret),
-      });
+      await AppPluginDelegationService.setAuthInfo(values as { auth_code: string; auth_secret: string });
       ElMessage.success($t('app.plugin.auth.dialog.success'));
       formApi.resetForm();
       emit('success');

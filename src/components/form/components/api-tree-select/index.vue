@@ -1,46 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-import { ElTreeSelect } from 'element-plus';
-
-import ApiComponent from '../api-component/index.vue';
-
-const props = withDefaults(
-  defineProps<{
-    childrenField?: string;
-    labelField?: string;
-    modelValue?: Array<number | string> | null | number | string | undefined;
-    valueField?: string;
-  }>(),
-  {
-    valueField: 'id',
-    labelField: 'name',
-    childrenField: 'children',
-  },
-);
-
-const emit = defineEmits<{
-  'update:modelValue': [
-    modelValue: Array<number | string> | null | number | string | undefined,
-  ];
-}>();
-
-const value = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(val) {
-    emit('update:modelValue', val);
-  },
-});
-
-defineExpose({
-  getValue() {
-    return value.value;
-  },
-});
-</script>
-
 <template>
   <ApiComponent
     v-model="value"
@@ -52,3 +9,42 @@ defineExpose({
     v-bind="$attrs"
   />
 </template>
+
+<script setup lang="ts">
+import ApiComponent from '../api-component/index.vue'
+import { computed } from 'vue'
+import { ElTreeSelect } from 'element-plus'
+
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string | undefined | number | null | Array<string | number>
+    valueField?: string
+    labelField?: string
+    childrenField?: string
+  }>(),
+  {
+    valueField: 'id',
+    labelField: 'name',
+    childrenField: 'children',
+  },
+)
+
+const emit = defineEmits<{
+  'update:modelValue': [modelValue: string | undefined | number | null | Array<string | number>]
+}>()
+
+const value = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  },
+})
+
+defineExpose({
+  getValue() {
+    return value.value
+  },
+})
+</script>

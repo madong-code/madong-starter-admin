@@ -8,9 +8,9 @@ export interface PopConfirm {
   title?: string;
   content?: string;
   confirm?: (e?: any, record?: any) => void;
-  /** 旧版确认回调 */
-  ok?: (record?: any) => void;
   cancel?: (record?: any) => void;
+  /** 确认回调（运行时读取该字段执行确认逻辑） */
+  ok?: (record?: any) => void;
   icon?: Component | string;
   confirmText?: string;
   cancelText?: string;
@@ -50,8 +50,6 @@ export interface ActionItem {
   ifShow?: ((action: ActionItem, record: any) => boolean) | boolean;
   /** 权限编码 */
   auth?: string | string[];
-  /** 无权限时的表现：hide=隐藏按钮（默认），disable=渲染但禁用（保持操作栏对齐） */
-  authMode?: 'disable' | 'hide';
   /** 排序 */
   sort?: number;
   /** 点击事件 */

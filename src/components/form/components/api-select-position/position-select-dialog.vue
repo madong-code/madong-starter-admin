@@ -148,9 +148,9 @@ const loadData = async () => {
 
     const valueArray = Array.isArray(props.value)
       ? props.value
-      : props.value
+      : (props.value
         ? [String(props.value)]
-        : [];
+        : []);
 
     if (valueArray.length > 0) {
       const validPositionIds = new Set(

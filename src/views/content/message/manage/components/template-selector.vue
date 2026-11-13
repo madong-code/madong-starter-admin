@@ -231,7 +231,7 @@ defineExpose({ open });
 <template>
   <Dialog>
     <div style="padding: 16px 20px">
-      <p style="margin-bottom: 12px; color: var(--el-text-color-regular)">
+      <p style="margin-bottom: 12px; color: #666">
         <template v-if="definitionName">
           {{
             $t('content.message.manage.template_selector.title_desc', {
@@ -355,7 +355,7 @@ defineExpose({ open });
 <style lang="scss" scoped>
 .empty-state {
   padding: 60px 0;
-  color: var(--el-text-color-secondary);
+  color: #999;
   text-align: center;
 }
 
@@ -366,8 +366,8 @@ defineExpose({ open });
   align-items: center;
   padding: 8px 12px;
   margin-bottom: 12px;
-  background: var(--el-fill-color-light);
-  border: 1px solid var(--el-border-color-lighter);
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
   border-radius: 4px;
 }
 
@@ -375,14 +375,14 @@ defineExpose({ open });
   flex-shrink: 0;
   font-size: 12px;
   font-weight: 500;
-  color: var(--el-text-color-primary);
+  color: #333;
   white-space: nowrap;
 }
 
 .template-list {
   max-height: 400px;
   overflow-y: auto;
-  border: 1px solid var(--el-border-color-lighter);
+  border: 1px solid #ebeef5;
   border-radius: 4px;
 }
 
@@ -391,11 +391,11 @@ defineExpose({ open });
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  border-bottom: 1px solid var(--el-border-color-extra-light);
+  border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.15s;
 
   &:hover {
-    background-color: var(--el-fill-color-light);
+    background-color: #f5f7fa;
   }
 
   &:last-child {
@@ -410,7 +410,7 @@ defineExpose({ open });
 .template-type {
   margin-left: 6px;
   font-size: 12px;
-  color: var(--el-text-color-secondary);
+  color: #999;
 }
 
 .assigned-badge {
@@ -431,6 +431,6 @@ defineExpose({ open });
 .selected-count {
   margin-top: 8px;
   font-size: 12px;
-  color: var(--el-text-color-secondary);
+  color: #999;
 }
 </style>

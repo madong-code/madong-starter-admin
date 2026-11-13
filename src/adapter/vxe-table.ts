@@ -1,13 +1,14 @@
-import type { ComponentPropsMap, ComponentType } from './component';
-
 import type { VxeTableGridOptions } from '#/core/plugins/vxe-table';
 
-// 导入渲染器
-import { cellRenderers } from '#/components/render';
+import type { ComponentPropsMap, ComponentType } from './component';
+
 import {
   setupVbenVxeTable,
   useVbenVxeGrid as useGrid,
 } from '#/core/plugins/vxe-table';
+
+// 导入渲染器
+import { cellRenderers } from '#/components/render';
 
 import { useVbenForm } from './form';
 

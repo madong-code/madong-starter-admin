@@ -1,29 +1,28 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useAttrs, useSlots, watch } from 'vue';
+import { computed, ref, onMounted, useAttrs, useSlots, watch } from 'vue'
+import { ElMessage, ElButton } from 'element-plus'
+import { Icon } from '#/components/icon'
+import { useAccessStore } from '#/core/stores'
 
-import { ElButton, ElMessage } from 'element-plus';
-
-import { Icon } from '#/components/icon';
-import { useAccessStore } from '#/core/stores';
 
 defineOptions({
   name: 'Upload',
   inheritAttrs: false,
-});
+})
 
 const props = withDefaults(
   defineProps<{
-    accept?: string;
-    action?: string;
-    disabled?: boolean;
-    headers?: Record<string, string>;
-    limit?: number;
-    listType?: 'picture' | 'picture-card' | 'text';
-    maxCount?: number;
-    maxSize?: number;
-    modelValue?: string;
-    separator?: string;
-    uploadName?: string;
+    modelValue?: string
+    action?: string
+    headers?: Record<string, string>
+    disabled?: boolean
+    listType?: 'picture' | 'picture-card' | 'text'
+    maxCount?: number
+    uploadName?: string
+    separator?: string
+    accept?: string
+    maxSize?: number
+    limit?: number
   }>(),
   {
     modelValue: '',
@@ -38,41 +37,41 @@ const props = withDefaults(
     maxSize: 5 * 1024 * 1024 * 1024,
     limit: 10,
   },
-);
+)
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
-const accessStore = useAccessStore();
-const fileList = ref<any[]>([]);
-const attrs = useAttrs();
-const slots = useSlots();
-const slotNames = computed(() => Object.keys(slots));
+const accessStore = useAccessStore()
+const fileList = ref<any[]>([])
+const attrs = useAttrs()
+const slots = useSlots()
+const slotNames = computed(() => Object.keys(slots))
 
 const bindProps = computed(() => {
-  const excluded = new Set(['name', 'onBlur', 'onChange', 'onInput']);
+  const excluded = new Set(['onChange', 'onInput', 'onBlur', 'name'])
   const filtered = Object.fromEntries(
     Object.entries(attrs).filter(([k]) => !excluded.has(k)),
-  );
+  )
   return {
     ...filtered,
     ...props,
     name: props.uploadName || 'file',
-  };
-});
+  }
+})
 
 const mValue = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue
   },
   set(val) {
-    emit('update:modelValue', val);
+    emit('update:modelValue', val)
   },
-});
+})
 
 const mHeaders = computed<Record<string, string>>(() => ({
   Authorization: accessStore.accessToken ?? '',
   ...props.headers,
-}));
+}))
 
 const handleChange = (info: any) => {
   if (info.status === 'success') {
@@ -80,56 +79,51 @@ const handleChange = (info: any) => {
       if (item.uid === info.uid) {
         return {
           ...item,
-          uid:
-            info.response?.data?.fileInfoId ||
-            info.response?.base_path ||
-            info.response?.url,
-        };
+          uid: info.response?.data?.fileInfoId || info.response?.base_path || info.response?.url,
+        }
       }
-      return item;
-    });
+      return item
+    })
     mValue.value = fileList.value
       .map((item: any) => item.uid)
-      .join(props.separator);
+      .join(props.separator)
   } else if (info.status === 'fail') {
-    ElMessage.error(`${info.name} 上传失败`);
+    ElMessage.error(`${info.name} 上传失败`)
   }
-};
+}
 
 const handleRemove = (file: any) => {
   mValue.value = fileList.value
     .filter((item: any) => item.uid !== file.uid)
     .map((item: any) => item.uid)
-    .join(props.separator);
-  return true;
-};
+    .join(props.separator)
+  return true
+}
 
 const beforeUpload = (file: File) => {
   if (file.size > props.maxSize) {
-    ElMessage.error(`文件大小不能超过 ${props.maxSize / 1024 / 1024} MB`);
-    return false;
+    ElMessage.error(`文件大小不能超过 ${props.maxSize / 1024 / 1024} MB`)
+    return false
   }
   if (props.accept) {
-    const acceptedTypes = props.accept.split(',').map((type) => type.trim());
-    const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`;
+    const acceptedTypes = props.accept.split(',').map((type) => type.trim())
+    const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`
     if (!acceptedTypes.includes(fileExtension)) {
-      ElMessage.error(`只能上传 ${props.accept} 格式的文件！`);
-      return false;
+      ElMessage.error(`只能上传 ${props.accept} 格式的文件！`)
+      return false
     }
   }
-  return true;
-};
+  return true
+}
 
 watch(
   () => props.modelValue,
-  () => {
-    fileList.value = [];
-  },
-);
+  () => { fileList.value = [] },
+)
 
 onMounted(() => {
-  fileList.value = [];
-});
+  fileList.value = []
+})
 </script>
 
 <template>
@@ -153,7 +147,7 @@ onMounted(() => {
       </ElButton>
     </template>
     <template v-for="item in slotNames" :key="item" #[item]>
-      <slot :name="item"></slot>
+      <slot :name="item" />
     </template>
   </Upload>
 </template>

@@ -43,12 +43,12 @@ export const MemberAuthService = {
   },
 
   /** 移除会员-标签关联 */
-  removeUserTag(data: { member_id: number; tag_id: number }[]): Promise<void> {
+  removeUserTag(data: { member_id: number; tag_id: number; }[]): Promise<void> {
     return requestClient.post(`${BASE_URL}/remove-user-tag`, data);
   },
 
   /** 保存会员-标签关联 */
-  saveUserTag(data: { member_id: number; tag_id: number }[]): Promise<void> {
+  saveUserTag(data: { member_id: number; tag_id: number; }[]): Promise<void> {
     return requestClient.post(`${BASE_URL}/save-user-tag`, data);
   },
 };

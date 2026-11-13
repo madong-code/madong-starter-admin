@@ -1,28 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-import { ElAvatar } from 'element-plus';
-
-const props = withDefaults(
-  defineProps<{
-    data?: Record<string, any>;
-    fieldName?: string;
-    schema?: any;
-    shape?: 'circle' | 'square';
-    size?: number;
-    value?: null | string | undefined;
-  }>(),
-  {
-    size: 102,
-    shape: 'square',
-  },
-);
-
-const isShow = computed(
-  () => props.value !== undefined && props.value !== null && props.value !== '',
-);
-</script>
-
 <template>
   <ElAvatar
     v-if="isShow"
@@ -32,6 +7,28 @@ const isShow = computed(
   />
   <span v-else class="empty-value">--</span>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { ElAvatar } from 'element-plus'
+
+const props = withDefaults(
+  defineProps<{
+    value?: string | null | undefined
+    fieldName?: string
+    schema?: any
+    data?: Record<string, any>
+    size?: number
+    shape?: 'circle' | 'square'
+  }>(),
+  {
+    size: 102,
+    shape: 'square',
+  },
+)
+
+const isShow = computed(() => props.value !== undefined && props.value !== null && props.value !== '')
+</script>
 
 <style lang="scss" scoped>
 :deep(.el-avatar) {

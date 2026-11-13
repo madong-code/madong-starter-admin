@@ -62,12 +62,11 @@ async function handleCreateNote() {
   let targetFolderId = currentFolderId.value;
   if (!targetFolderId || targetFolderId === 'recent') {
     const folders = await NotepadService.getFolders();
-    const firstFolder = folders[0];
-    if (!firstFolder) {
+    if (folders.length === 0) {
       ElMessage.warning('请先创建一个文件夹');
       return;
     }
-    targetFolderId = firstFolder.id;
+    targetFolderId = folders[0]!.id;
     // 自动切换到该文件夹
     currentFolderId.value = targetFolderId;
   }

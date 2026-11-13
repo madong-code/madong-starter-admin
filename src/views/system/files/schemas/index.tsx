@@ -41,7 +41,12 @@ export function isImageFile(row: Record<string, any>): boolean {
     .startsWith('image/');
 }
 
-/** 资源访问地址（公开空间拼接访问域名，私有空间由 buildStaticUrl 换取签名直链） */
+/**
+ * 资源访问地址
+ *
+ * 公开空间由 buildStaticUrl 拼接访问域名；私有空间（租户开启私有存储时）
+ * 由 buildStaticUrl 内部换取带签名的临时直链，不会直接暴露对象地址。
+ */
 export function fileUrl(row: Record<string, any>): string {
   return buildStaticUrl(String(row?.base_path || row?.url || ''));
 }
@@ -84,7 +89,7 @@ export const useCrudSchema = (
    * 删除附件（单条 / 批量）
    *
    * 后端会在删除记录的同时清理对应的云 / 本地物理资源，不可恢复，
-   * 因此必须先校验当前登录管理员密码。
+   * 因此必须先校验当前登录管理员密码。删除与物理清理均限定在当前租户作用域内。
    */
   async function handleRemove(ids: (number | string)[]) {
     if (!ids.length) {
@@ -101,9 +106,7 @@ export const useCrudSchema = (
     try {
       crudApi?.setLoading(true);
       await FilesService.removeWithPassword(ids, password);
-      ElMessage.success(
-        $t('system.files.delete.success', [String(ids.length)]),
-      );
+      ElMessage.success($t('system.files.delete.success', [String(ids.length)]));
       const state = crudApi?.getReadonlyState();
       if (state) {
         state.selection = [];

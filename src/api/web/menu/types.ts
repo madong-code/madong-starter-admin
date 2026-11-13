@@ -6,7 +6,7 @@ export interface Menu {
   id: string;
   pid: string;
   app: string;
-  /** 菜单分类：1 导航菜单 2 会员菜单 3 头部动作菜单（字典 web.MenuCategory） */
+  /** 菜单分类：1 导航菜单 2 会员菜单（字典 web.MenuCategory） */
   category: number;
   source: string;
   code?: null | string;
@@ -36,6 +36,17 @@ export interface Menu {
   is_show_text?: string;
   enabled_text?: string;
   children?: Menu[];
+  [key: string]: any;
+}
+
+export interface MenuMeta {
+  id: number;
+  type: string;
+  menu_type: string;
+  target?: string;
+  hidden?: boolean;
+  disabled?: boolean;
+  badge?: string | number;
   [key: string]: any;
 }
 

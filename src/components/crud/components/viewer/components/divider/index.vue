@@ -1,22 +1,22 @@
+<template>
+  <div class="read-divider" :class="{ 'read-divider--with-title': !!title }">
+    <h4 v-if="title" class="read-divider__title">{{ title }}</h4>
+    <div class="read-divider__line" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import type { VbenFormSchema } from '#/adapter/form';
 
 defineProps<{
-  data?: Record<string, any>;
+  value?: any;
   fieldName?: string;
   schema?: VbenFormSchema;
+  data?: Record<string, any>;
   /** 分割线标题，通过 schema.componentProps.title 传入 */
   title?: string;
-  value?: any;
 }>();
 </script>
-
-<template>
-  <div class="read-divider" :class="{ 'read-divider--with-title': !!title }">
-    <h4 v-if="title" class="read-divider__title">{{ title }}</h4>
-    <div class="read-divider__line"></div>
-  </div>
-</template>
 
 <style scoped>
 .read-divider {
@@ -34,8 +34,8 @@ defineProps<{
   margin: 0 0 6px;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1.4;
   color: var(--el-text-color-primary, #303133);
+  line-height: 1.4;
   background: none !important;
 }
 

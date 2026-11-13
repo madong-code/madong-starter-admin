@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useVbenDrawer } from '#/core/ui/common';
+
 import NotepadPage from '#/views/content/notepad/index.vue';
 
 const [Drawer, drawerApi] = useVbenDrawer({

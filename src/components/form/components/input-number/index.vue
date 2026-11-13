@@ -1,39 +1,39 @@
-﻿<script setup lang="ts">
-import { computed, useSlots } from 'vue';
+﻿<template>
+  <ElInputNumber v-model="value">
+    <template v-for="(_, slotName) in slots" #[slotName]>
+      <slot :name="slotName" />
+    </template>
+  </ElInputNumber>
+</template>
+
+<script setup lang="ts">
+import { useSlots, computed } from 'vue'
 
 const props = defineProps<{
-  modelValue: number | string | undefined;
-}>();
+  modelValue: number | undefined | string
+}>()
 
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: number | undefined];
-}>();
+  'update:modelValue': [modelValue: number | undefined]
+}>()
 
 const value = computed({
   get() {
     if (typeof props.modelValue === 'string') {
-      return Number(props.modelValue);
+      return Number(props.modelValue)
     }
-    return props.modelValue;
+    return props.modelValue
   },
   set(val) {
-    emit('update:modelValue', val);
+    emit('update:modelValue', val)
   },
-});
+})
 
-const slots = useSlots();
+const slots = useSlots()
 
 defineExpose({
   getValue() {
-    return value.value;
+    return value.value
   },
-});
+})
 </script>
-
-<template>
-  <ElInputNumber v-model="value">
-    <template v-for="(_, slotName) in slots" #[slotName]>
-      <slot :name="slotName"></slot>
-    </template>
-  </ElInputNumber>
-</template>

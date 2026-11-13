@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { ElTree as ElTreeType } from 'element-plus';
-
 import type { CrudApiInstance } from '#/adapter/crud';
 
 import { nextTick, ref } from 'vue';
@@ -39,7 +37,7 @@ const categoryColors: Record<number, string> = {
 
 let menuTreeData: TreeNode[] = [];
 
-const treeRef = ref<InstanceType<typeof ElTreeType>>();
+const treeRef = ref<any>();
 const treeData = ref<TreeNode[]>([]);
 const currentRow = ref<any>(null);
 const crudApi = ref<CrudApiInstance>();
@@ -172,11 +170,9 @@ const expandToLevel = (level: number) => {
 };
 
 const selectAll = () =>
-  traverse(treeData.value, (n) => treeRef.value?.setChecked(n.id, true, false));
+  traverse(treeData.value, (n) => treeRef.value?.setChecked(n.id, true));
 const selectNone = () =>
-  traverse(treeData.value, (n) =>
-    treeRef.value?.setChecked(n.id, false, false),
-  );
+  traverse(treeData.value, (n) => treeRef.value?.setChecked(n.id, false));
 
 const selectInverse = () => {
   const leafKeys: (number | string)[] = [];
@@ -196,7 +192,7 @@ const selectInverse = () => {
 
   treeRef.value?.setCheckedKeys([]);
   nextTick(() => {
-    toCheck.forEach((k) => treeRef.value?.setChecked(k, true, false));
+    toCheck.forEach((k) => treeRef.value?.setChecked(k, true));
   });
 };
 
@@ -357,7 +353,7 @@ const handleToolCommand = (command: string) => {
 .gt-name {
   font-size: 13px;
   font-weight: 500;
-  color: var(--el-text-color-primary);
+  color: #333;
 }
 
 .gt-badge {

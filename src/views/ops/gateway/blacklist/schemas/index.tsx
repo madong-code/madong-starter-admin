@@ -98,7 +98,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('ops.gateway.blacklist.table.search.name'),
           componentProps: {
             placeholder: $t(
-              'ops.gateway.blacklist.table.search.placeholder.name',
+              'setting.gateway.blacklist.table.search.placeholder.name',
             ),
             clearable: true,
           },
@@ -109,7 +109,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('ops.gateway.blacklist.table.search.ip'),
           componentProps: {
             placeholder: $t(
-              'ops.gateway.blacklist.table.search.placeholder.ip',
+              'setting.gateway.blacklist.table.search.placeholder.ip',
             ),
             clearable: true,
           },
@@ -120,7 +120,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('ops.gateway.blacklist.table.search.path'),
           componentProps: {
             placeholder: $t(
-              'ops.gateway.blacklist.table.search.placeholder.path',
+              'setting.gateway.blacklist.table.search.placeholder.path',
             ),
             clearable: true,
           },
@@ -133,7 +133,7 @@ export const useCrudSchema = (): CrudSchema => {
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
             placeholder: $t(
-              'ops.gateway.blacklist.table.search.placeholder.enabled',
+              'setting.gateway.blacklist.table.search.placeholder.enabled',
             ),
           },
         },
@@ -165,7 +165,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.name',
+              'setting.gateway.blacklist.form.modal.placeholder.name',
             ),
             clearable: true,
           },
@@ -179,7 +179,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.match_type',
+              'setting.gateway.blacklist.form.modal.placeholder.match_type',
             ),
             clearable: true,
             options: [
@@ -199,7 +199,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             type: 'number',
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.priority',
+              'setting.gateway.blacklist.form.modal.placeholder.priority',
             ),
             clearable: true,
           },
@@ -230,7 +230,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.path',
+              'setting.gateway.blacklist.form.modal.placeholder.path',
             ),
             clearable: true,
           },
@@ -243,7 +243,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             type: 'datetime',
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.start_time',
+              'setting.gateway.blacklist.form.modal.placeholder.start_time',
             ),
             clearable: true,
             format: 'YYYY-MM-DD HH:mm:ss',
@@ -258,7 +258,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             type: 'datetime',
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.end_time',
+              'setting.gateway.blacklist.form.modal.placeholder.end_time',
             ),
             clearable: true,
             format: 'YYYY-MM-DD HH:mm:ss',
@@ -286,7 +286,7 @@ export const useCrudSchema = (): CrudSchema => {
             type: 'textarea',
             rows: 4,
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.message',
+              'setting.gateway.blacklist.form.modal.placeholder.message',
             ),
           },
         },
@@ -299,7 +299,7 @@ export const useCrudSchema = (): CrudSchema => {
             type: 'textarea',
             rows: 4,
             placeholder: $t(
-              'ops.gateway.blacklist.form.modal.placeholder.remark',
+              'setting.gateway.blacklist.form.modal.placeholder.remark',
             ),
           },
         },

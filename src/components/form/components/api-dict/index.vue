@@ -55,12 +55,8 @@ onBeforeMount(async () => {
     const dictModule = await import('#/store/modules/dict');
     const dictStore = dictModule.useDictStore();
     const data = await dictStore.getDictByType(props.code);
-    options.value = Array.isArray(data)
-      ? data.map((item) => ({
-          ...item,
-          modelValue: item.value,
-        }))
-      : [];
+    // 确保 options 始终是数组
+    options.value = (Array.isArray(data) ? data : []) as unknown as DictOption[];
   } catch (error) {
     console.error('获取字典数据失败:', error);
     options.value = [];

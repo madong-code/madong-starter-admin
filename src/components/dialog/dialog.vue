@@ -15,27 +15,11 @@ const props = withDefaults(defineProps<MyDialogProps>(), {
   footer: true,
   dialogType: 'dialog',
   draggable: false,
-  // 注意：Boolean prop 未传入时 Vue 会解析为 false 而非 undefined，
-  // 默认开启的开关必须在此声明默认值，模板里的 ?? true 不会生效
-  modal: true,
-  fullscreenButton: true,
-  closeOnPressEscape: true,
-  destroyOnClose: true,
-  closeOnClickModal: false,
-  showClose: false,
 });
 
 const emit = defineEmits<DialogEmits>();
 const dialogVisible = ref(false);
-const dialogPropsRef = ref<MyDialogProps>(props);
-
-// 全屏状态与 dialogPropsRef 双向同步，使 setState({ fullscreen }) 可驱动且 getState() 可读
-const fullscreen = computed({
-  get: () => dialogPropsRef.value.fullscreen ?? false,
-  set: (value: boolean) => {
-    dialogPropsRef.value = { ...dialogPropsRef.value, fullscreen: value };
-  },
-});
+const fullscreen = ref(false);
 
 // 根据 dialogType 决定使用哪个组件
 const dialogComponent = computed(() => {
@@ -50,13 +34,10 @@ const customClass = computed(() => {
     : `${baseClass} m-dialog-box`;
 });
 
+const dialogPropsRef = ref<MyDialogProps>(props);
 const toggleFullscreen = () => {
   fullscreen.value = !fullscreen.value;
 };
-// ElDrawer 无 fullscreen prop，抽屉全屏通过 size=100% 实现
-const drawerSize = computed(() =>
-  fullscreen.value ? '100%' : (dialogPropsRef.value.width ?? '40%'),
-);
 const handleCancel = () => {
   dialogVisible.value = false;
   if (props.onCancel) {
@@ -74,13 +55,11 @@ const handleSubmit = () => {
 };
 const methods: MyDialogInstance = {
   open() {
-    fullscreen.value = false;
     dialogVisible.value = true;
   },
   close() {
     dialogVisible.value = false;
   },
-  toggleFullscreen,
   // 设置组件状态（props）
   setState(state: MyDialogProps) {
     return new Promise((resolve) => {
@@ -109,17 +88,17 @@ defineExpose(methods);
   <component
     :is="dialogComponent"
     :class="customClass"
-    :destroy-on-close="dialogPropsRef.destroyOnClose"
-    :close-on-click-modal="dialogPropsRef.closeOnClickModal"
-    :close-on-press-escape="dialogPropsRef.closeOnPressEscape"
+    :destroy-on-close="dialogPropsRef.destroyOnClose ?? true"
+    :close-on-click-modal="dialogPropsRef.closeOnClickModal ?? false"
+    :close-on-press-escape="dialogPropsRef.closeOnPressEscape ?? true"
     v-model="dialogVisible"
     :width="dialogPropsRef.width ?? '60%'"
     :title="dialogPropsRef.title ?? '操作'"
     :fullscreen="fullscreen"
-    :show-close="dialogPropsRef.showClose"
+    :show-close="dialogPropsRef.showClose ?? true"
     :direction="dialogPropsRef.direction ?? 'rtl'"
-    :size="drawerSize"
-    :modal="dialogPropsRef.modal"
+    :size="dialogPropsRef.width ?? '40%'"
+    :modal="dialogPropsRef.modal ?? true"
     :append-to-body="true"
     :draggable="dialogPropsRef.draggable ?? true"
     :z-index="dialogPropsRef.zIndex"
@@ -131,7 +110,7 @@ defineExpose(methods);
         }}</span>
         <div class="dialog-header-actions">
           <ElButton
-            v-if="dialogPropsRef.fullscreenButton"
+            v-if="dialogPropsRef.dialogType === 'dialog'"
             class="dialog-header-btn"
             @click="toggleFullscreen"
             link

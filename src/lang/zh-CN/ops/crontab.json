@@ -11,6 +11,7 @@
       "parameter": "参数",
       "enabled": "状态",
       "source": "来源",
+      "tenant_id": "租户",
       "last_running_time": "最后运行时间"
     },
     "search": {
@@ -71,5 +72,6 @@
       "hour": "时",
       "minute": "分"
     }
+
   }
 }

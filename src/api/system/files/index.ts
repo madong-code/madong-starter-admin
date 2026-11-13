@@ -8,49 +8,40 @@ const baseUrl = '/system/files';
 export const FilesService = {
   ...BaseService<FilesRow>({ baseUrl }),
 
-  /** 图片上传（落到 sub_dir 子目录），可通过 onUploadProgress 获取百分比 */
-  uploadImage(data: {
-    file: File;
-    onUploadProgress?: (percent: number) => void;
-    sub_dir: string;
-  }) {
+  /**
+   * 按资源 key 批量换取可访问地址
+   *
+   * 公开空间返回访问域名拼接结果；私有空间（非公开读）返回带签名的临时直链。
+   *
+   * @param keys 资源地址集合（相对路径或本空间域名下的绝对地址）
+   */
+  accessUrls(keys: string[]) {
+    return requestClient.post(`${baseUrl}/access-urls`, { keys }) as Promise<
+      { key: string; url: string }[]
+    >;
+  },
+
+  /** 图片上传（落到 sub_dir 子目录） */
+  uploadImage(data: { file: File; sub_dir: string }) {
     const formData = new FormData();
     formData.append('file', data.file);
     formData.append('sub_dir', data.sub_dir);
     return requestClient.post(`${baseUrl}/upload-image`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
-      onUploadProgress: (event) => {
-        if (event.total) {
-          data.onUploadProgress?.(
-            Math.round((event.loaded / event.total) * 100),
-          );
-        }
-      },
     });
   },
 
-  /** 附件上传（非图片文件），可通过 onUploadProgress 获取百分比 */
-  uploadAttachment(data: {
-    file: File;
-    onUploadProgress?: (percent: number) => void;
-    sub_dir: string;
-  }) {
+  /** 附件上传（非图片文件） */
+  uploadAttachment(data: { file: File; sub_dir: string }) {
     const formData = new FormData();
     formData.append('file', data.file);
     formData.append('sub_dir', data.sub_dir);
     return requestClient.post(`${baseUrl}/upload-file`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
-      onUploadProgress: (event) => {
-        if (event.total) {
-          data.onUploadProgress?.(
-            Math.round((event.loaded / event.total) * 100),
-          );
-        }
-      },
     });
   },
 
-  /** 远程图片 URL 拉取并保存到系统存储 */
+  /** 远程图片 URL 拉取并保存到当前租户的存储空间 */
   fetchAndSaveImage(data: { sub_dir?: string; url: string }) {
     return requestClient.post(`${baseUrl}/fetch-and-save-image`, data);
   },
@@ -66,19 +57,6 @@ export const FilesService = {
 
   uploadImageBase64(data: any) {
     return requestClient.post(`${baseUrl}/upload-image-base64`, data);
-  },
-
-  /**
-   * 按资源 key 批量换取可访问地址
-   *
-   * 公开空间返回访问域名拼接结果；私有空间（非公开读）返回带签名的临时直链。
-   *
-   * @param keys 资源地址集合（相对路径或本空间域名下的绝对地址）
-   */
-  accessUrls(keys: string[]) {
-    return requestClient.post(`${baseUrl}/access-urls`, { keys }) as Promise<
-      { key: string; url: string }[]
-    >;
   },
 
   downloadById(id: number | string) {

@@ -35,7 +35,7 @@ let sseConn: null | { close: () => void } = null;
 
 const openDialog = async () => {
   if (!props.plugin?.code) {
-    ElMessage.error($t('app.plugin.market.invalid_uninstall'));
+    ElMessage.error('模块信息不完整，无法进行卸载');
     return;
   }
   dialogApi.open();
@@ -63,7 +63,7 @@ const scrollToBottom = () => {
 const startUninstall = async () => {
   currentStep.value = 2;
   uninstallProgress.value = 0;
-  uninstallLogs.value = [$t('app.plugin.market.standalone.uninstall.log_start')];
+  uninstallLogs.value = ['开始卸载...'];
   startSseUninstall();
 };
 
@@ -98,11 +98,7 @@ const startSseUninstall = () => {
       // warning 处理器：插件已安装等提示信息
       const eventData = payload?.data || payload;
       if (eventData.message) {
-        uninstallLogs.value.push(
-          $t('app.plugin.market.standalone.uninstall.log_warn_prefix', {
-            msg: eventData.message,
-          }),
-        );
+        uninstallLogs.value.push(`警告: ${eventData.message}`);
         scrollToBottom();
       }
       uninstallStatus.value = 'warning';
@@ -115,11 +111,7 @@ const startSseUninstall = () => {
       // error 处理器仅在服务器主动发送 event: error 时触发
       const eventData = payload?.data || payload;
       if (eventData.message) {
-        uninstallLogs.value.push(
-          $t('app.plugin.market.standalone.uninstall.log_error_prefix', {
-            msg: eventData.message,
-          }),
-        );
+        uninstallLogs.value.push(`错误: ${eventData.message}`);
         uninstallStatus.value = 'exception';
         currentStep.value = 3;
         uninstallResult.value = 'error';
@@ -130,9 +122,7 @@ const startSseUninstall = () => {
     onError: () => {
       // onError 仅在连接意外断开时触发，completed/error 已处理时不覆盖
       if (currentStep.value < 3) {
-        uninstallLogs.value.push(
-          $t('app.plugin.market.standalone.uninstall.sse_error'),
-        );
+        uninstallLogs.value.push('SSE连接错误');
         uninstallStatus.value = 'exception';
         currentStep.value = 3;
         uninstallResult.value = 'error';

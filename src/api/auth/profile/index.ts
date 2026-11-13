@@ -17,10 +17,6 @@ export const ProfileService = {
     return requestClient.put(BASE_URL, data);
   },
 
-  updateAvatar(data: { avatar: string }) {
-    return requestClient.put(BASE_URL, data);
-  },
-
   /**
    * 上传头像文件到专用端点，后端自动保存到 avatar/ 目录并更新用户头像
    * @param file 头像 File 对象

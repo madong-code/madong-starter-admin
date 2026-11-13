@@ -8,15 +8,7 @@ import type {
 
 import type { VbenFormProps } from '#/adapter/form';
 
-import {
-  computed,
-  nextTick,
-  reactive,
-  ref,
-  shallowReactive,
-  toRaw,
-  useSlots,
-} from 'vue';
+import { computed, nextTick, reactive, ref, toRaw, useSlots } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { ElMessage, ElMessageBox } from 'element-plus';
@@ -58,30 +50,12 @@ const readonlyState = reactive<{ selection: any[] }>({ selection: [] });
 const route = useRoute();
 
 // 动态状态，用于存储通过 setState 设置的配置
-const dynamicState = shallowReactive<Record<string, unknown>>({});
+const dynamicState = reactive<Partial<CrudSchema>>({});
 
 // 合并后的 crudSchema，优先使用动态配置
-const mergedCrudSchema = computed<CrudSchema>(() => {
-  const schema = Object.assign(
-    {},
-    props.crudSchema,
-    dynamicState,
-  ) as CrudSchema;
-  return {
-    ...schema,
-    formDialog: schema.formDialog ?? {
-      dialogType: schema.dialogType,
-      enabled: schema.useCrud !== false,
-      schema: schema.formSchema,
-      title: schema.dialogTitle,
-      width: schema.dialogWidth,
-    },
-    searchForm: schema.searchForm ?? {
-      enabled: schema.useSearchForm !== false,
-      schema: schema.searchFormSchema,
-    },
-    toolbar: schema.toolbar ?? schema.toolbarConfig,
-  } as CrudSchema;
+const mergedCrudSchema = computed(() => {
+  const merged = Object.assign({}, props.crudSchema, dynamicState) as any;
+  return merged;
 });
 
 // ============ 表格配置 ============
@@ -127,10 +101,19 @@ const tableColumns = computed(() => {
   return typeof cols === 'function' ? cols() : cols;
 });
 
+// 操作栏默认固定右侧，外部通过 tableActionColumn 自定义可覆盖
+const tableActionColumn = computed(() => {
+  const custom = tableConfig.value.tableActionColumn || {};
+  return {
+    fixed: 'right' as const,
+    ...custom,
+  };
+});
+
 const columns = useColumns(
   {
     columns: tableColumns.value,
-    tableActionColumn: tableConfig.value.tableActionColumn,
+    tableActionColumn: tableActionColumn.value,
   },
   tableActions,
   dropDownActions,
@@ -223,43 +206,12 @@ function getFormDialogOptions(): FormDialogOptions {
     commonConfig: fd?.commonConfig,
     draggable: fd?.draggable,
     fullscreenButton: fd?.fullscreenButton,
-    class: fd?.class,
-    zIndex: fd?.zIndex,
     transformFormValues: fd?.transformFormValues,
     // 支持业务层自定义 onSuccess 回调，未提供则使用默认刷新逻辑
     onSuccess:
       fd?.onSuccess ||
-      ((type: FormActionType, values?: Record<string, any>) => {
+      ((type: FormActionType, _values?: Record<string, any>) => {
         const api = props.crudApi || crudInstance;
-        const grid = gridApi.grid;
-        const rowKey = tableConfig.value.rowKey || 'id';
-
-        // 编辑场景：懒加载树（深层 >2 级）若整体 query 会丢失已展开层级、整表刷新。
-        // 改为用 vxe 的 updateData 就地更新对应行，保留所有展开状态，只刷新那一行。
-        if (type === 'edit' && values && grid && mergedTreeConfig.value?.lazy) {
-          const id = values[rowKey];
-          if (id !== undefined && id !== null) {
-            const fullData = grid.getTableData()?.fullData || [];
-            const oldRow = fullData.find((r: any) => r[rowKey] === id);
-            if (oldRow) {
-              // 合并旧行（保留 hasChild / 层级树态字段）与提交值
-              grid.updateData([{ ...oldRow, ...values }]);
-              // updateData 会重置该行的子树加载态并收起，导致编辑节点本身及下层层级丢失。
-              // 这里把编辑行重新展开，恢复其原本的展开状态（连同父链已展开的层级一起保留）。
-              const updatedRow = (grid.getTableData()?.fullData || []).find(
-                (r: any) => r[rowKey] === id,
-              );
-              if (updatedRow) {
-                grid.setTreeExpand(updatedRow, true);
-              }
-              return;
-            }
-          }
-          // 未在已加载数据中找到（如跨页/未展开路径）：回退到局部刷新
-          api.refreshUpdate();
-          return;
-        }
-
         if (type === 'edit') {
           api.refreshUpdate();
         } else {
@@ -304,7 +256,7 @@ const mergedTreeConfig = computed(() => {
   const tree = tableConfig.value.tree;
   if (!tree) return undefined;
 
-  const config: Record<string, any> = {
+  return {
     parentField: tree.pid || 'parentId',
     rowField: tree.id || 'id',
     childrenField: tree.children || 'children',
@@ -312,18 +264,6 @@ const mergedTreeConfig = computed(() => {
     // 透传 reserve 配置，刷新后保持展开状态
     reserve: tree.reserve ?? false,
   };
-
-  // 懒加载树：透传 lazy 与 loadMethod，展开节点时按 pid 异步加载子级
-  if (tree.lazy) {
-    config.lazy = true;
-    if (tree.loadMethod) {
-      config.loadMethod = async ({ row }: any) => {
-        return await tree.loadMethod!({ row });
-      };
-    }
-  }
-
-  return config;
 });
 
 // 事件类对象识别：vxe 工具栏刷新按钮会把原生事件对象（如 PointerEvent，
@@ -368,8 +308,6 @@ const mergedGridOptions = computed(() => {
   const { crudApi: api } = mergedCrudSchema.value;
   const paginationConfig = tableConfig.value.pagination;
   const isTreeMode = !!mergedTreeConfig.value;
-  // 懒加载树：保留分页（顶层分页查询，子级由 loadMethod 异步加载）
-  const isLazyTree = !!mergedTreeConfig.value?.lazy;
 
   // 获取最终使用的 API（table.proxyConfig 可覆盖 crudApi）
   const finalApi = tableConfig.value.proxyConfig
@@ -393,11 +331,10 @@ const mergedGridOptions = computed(() => {
     highlightCurrentRow: tableConfig.value.highlightCurrentRow,
     highlightHoverColumn: tableConfig.value.highlightHoverColumn,
     showOverflow: tableConfig.value.showOverflow,
-    // 树形模式下自动禁用分页（懒加载树保留分页）
-    pagerConfig:
-      isTreeMode && !isLazyTree
-        ? { enabled: false }
-        : (tableConfig.value.pagerConfig ?? true),
+    // 树形模式下自动禁用分页
+    pagerConfig: isTreeMode
+      ? { enabled: false }
+      : (tableConfig.value.pagerConfig ?? true),
     sortConfig: tableConfig.value.sortConfig,
     filterConfig: tableConfig.value.filterConfig,
     exportConfig: tableConfig.value.exportConfig,
@@ -410,9 +347,9 @@ const mergedGridOptions = computed(() => {
     // 是否可选择（树形模式下默认禁用）
     checkboxConfig: isTreeMode
       ? undefined
-      : tableConfig.value.checkable === false
+      : (tableConfig.value.checkable === false
         ? undefined
-        : { checkKey: tableConfig.value.rowKey || 'id' },
+        : { checkKey: tableConfig.value.rowKey || 'id' }),
     treeConfig: mergedTreeConfig.value,
     toolbarConfig: mergedToolbarConfig.value,
     proxyConfig: {
@@ -420,15 +357,14 @@ const mergedGridOptions = computed(() => {
         query: async ({ page }: any, formValues: any) => {
           // 解析搜索条件（详见 resolveQueryFormValues）
           const mergedFormValues = await resolveQueryFormValues(formValues);
-          // 静态树形模式不分页；懒加载树保留分页（顶层 pid 由 beforeFetch 注入）
-          const params =
-            isTreeMode && !isLazyTree
-              ? { ...mergedFormValues }
-              : {
-                  [paginationConfig?.currentKey || 'page']: page.currentPage,
-                  [paginationConfig?.sizeKey || 'limit']: page.pageSize,
-                  ...mergedFormValues,
-                };
+          // 树形模式不分页
+          const params = isTreeMode
+            ? { ...mergedFormValues }
+            : {
+                [paginationConfig?.currentKey || 'page']: page.currentPage,
+                [paginationConfig?.sizeKey || 'limit']: page.pageSize,
+                ...mergedFormValues,
+              };
           // 使用合并后的 beforeFetch（优先顶层配置）
           const beforeFetch = tableConfig.value.beforeFetch;
           const processedParams = beforeFetch ? beforeFetch(params) : params;
@@ -712,8 +648,11 @@ defineExpose(crudInstance);
         </slot>
       </template>
       <template #toolbar-tools>
-        <slot name="toolbar-tools" :actions="toolbarToolActions">
-          <TableAction :actions="toolbarToolActions" />
+        <slot name="toolbar-tools" :actions="finalDropDownToolbarActions">
+          <TableAction
+            :actions="toolbarToolActions"
+            :drop-down-actions="finalDropDownToolbarActions"
+          />
         </slot>
       </template>
       <template v-for="(_, name) in filteredSlots" #[name]="slotData">

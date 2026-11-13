@@ -63,23 +63,23 @@ watch(
 const tableGridOptions = computed<any>(() => ({
   data: props.modules,
   columns: [
-    { type: 'seq', title: $t('app.plugin.market.column_seq'), width: 60, align: 'center' },
+    { type: 'seq', title: '#', width: 60, align: 'center' },
     {
       field: 'name',
-      title: $t('app.plugin.market.column_module'),
+      title: '模块信息',
       minWidth: 200,
       slots: { default: 'name' },
     },
-    { field: 'version', title: $t('app.plugin.market.column_version'), width: 100, align: 'center' },
+    { field: 'version', title: '版本', width: 100, align: 'center' },
     {
       field: 'is_installed',
-      title: $t('app.plugin.market.column_status'),
+      title: '状态',
       width: 100,
       align: 'center',
       slots: { default: 'status' },
     },
     {
-      title: $t('app.plugin.market.column_action'),
+      title: '操作',
       width: 160,
       align: 'center',
       fixed: 'right',

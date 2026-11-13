@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, useSlots } from 'vue';
 
+import { WangEditor } from '#/core/plugins/wangeditor';
+import { useAccessStore } from '#/core/stores';
+
 import { ElButton } from 'element-plus';
 
 import { Icon } from '#/components/icon';
-import { WangEditor } from '#/core/plugins/wangeditor';
-import { useAccessStore } from '#/core/stores';
 
 const props = withDefaults(
   defineProps<{
@@ -56,6 +57,9 @@ const mergedUploadConfig = computed(() => {
   const headers: Record<string, string> = { ...custom.headers };
   if (accessStore.accessToken) {
     headers.Authorization = `Bearer ${accessStore.accessToken}`;
+  }
+  if (accessStore.tenantId) {
+    headers['X-Tenant-Id'] = String(accessStore.tenantId);
   }
 
   return { ...custom, server, headers };

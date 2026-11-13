@@ -1,8 +1,7 @@
-import type { Menu } from './types';
+import BaseService from '#/api/core/base'
+import type { Menu } from './types'
 
-import BaseService from '#/api/core/base';
-
-const baseUrl = '/web/menu';
+const baseUrl = '/web/menu'
 
 export const WebMenuService = {
   ...BaseService<Menu>({
@@ -10,4 +9,4 @@ export const WebMenuService = {
     allowedMethods: [],
     forbiddenMethods: [],
   }),
-};
+}

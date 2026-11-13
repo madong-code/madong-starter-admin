@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
+import { useUserStore } from '#/core/stores';
+
 import { ElButton, ElMessage, ElMessageBox } from 'element-plus';
 
 import { useVbenForm, z } from '#/adapter/form';
 import { ProfileService } from '#/api/auth/profile';
 import { Icon } from '#/components/icon';
 import { Page } from '#/components/page';
-import { useUserStore } from '#/core/stores';
 import { $t } from '#/locales';
 
 const userStore = useUserStore();

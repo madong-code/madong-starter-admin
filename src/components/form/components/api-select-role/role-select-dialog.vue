@@ -1,120 +1,3 @@
-<script setup lang="ts">
-import type { RoleRow } from '#/api/system/role/types';
-
-import { computed, ref, watch } from 'vue';
-
-import { ElCheckbox, ElEmpty, ElInput } from 'element-plus';
-
-import { RoleService } from '#/api/system/role';
-import { $t } from '#/locales';
-
-const props = withDefaults(
-  defineProps<{
-    multiple?: boolean;
-    rowKey?: string;
-    value?: string[];
-  }>(),
-  {
-    value: () => [],
-    multiple: true,
-    rowKey: 'id',
-  },
-);
-
-const emit = defineEmits<{
-  (e: 'select', selected: RoleRow[]): void;
-}>();
-
-const searchText = ref('');
-const roles = ref<RoleRow[]>([]);
-const selectedKeys = ref<string[]>([]);
-
-const filteredRoles = computed(() => {
-  if (!searchText.value) return roles.value;
-  const keyword = searchText.value.toLowerCase();
-  return roles.value.filter(
-    (item) =>
-      item.name.toLowerCase().includes(keyword) ||
-      item.code.toLowerCase().includes(keyword),
-  );
-});
-
-const isSelected = (data: RoleRow): boolean => {
-  return selectedKeys.value.includes(
-    String(data[props.rowKey as keyof RoleRow]),
-  );
-};
-
-const loadRoles = async () => {
-  try {
-    const response = await RoleService.list();
-    roles.value = Array.isArray(response)
-      ? response
-      : response?.items || response?.list || [];
-
-    if (props.value && props.value.length > 0) {
-      selectedKeys.value = [...props.value];
-    }
-  } catch (error) {
-    console.error('加载角色列表失败:', error);
-    roles.value = [];
-  }
-};
-
-const handleClick = (data: RoleRow) => {
-  if (!props.multiple) {
-    const key = String(data[props.rowKey as keyof RoleRow]);
-    selectedKeys.value = [key];
-    emitSelect();
-  }
-};
-
-const handleCheck = (checked: boolean, data: RoleRow) => {
-  const key = String(data[props.rowKey as keyof RoleRow]);
-  if (checked) {
-    if (!selectedKeys.value.includes(key)) {
-      selectedKeys.value = [...selectedKeys.value, key];
-    }
-  } else {
-    selectedKeys.value = selectedKeys.value.filter((k) => k !== key);
-  }
-  emitSelect();
-};
-
-const emitSelect = () => {
-  const selected = roles.value.filter((item) =>
-    selectedKeys.value.includes(String(item[props.rowKey as keyof RoleRow])),
-  );
-  emit('select', selected);
-};
-
-const getSelected = (): RoleRow[] => {
-  return roles.value.filter((item) =>
-    selectedKeys.value.includes(String(item[props.rowKey as keyof RoleRow])),
-  );
-};
-
-watch(
-  () => props.value,
-  (newValue) => {
-    if (newValue) {
-      selectedKeys.value = Array.isArray(newValue)
-        ? newValue.map(String)
-        : [String(newValue)];
-    } else {
-      selectedKeys.value = [];
-    }
-  },
-  { immediate: true },
-);
-
-defineExpose({
-  getSelected,
-});
-
-loadRoles();
-</script>
-
 <template>
   <div class="role-select-dialog">
     <ElInput
@@ -149,6 +32,118 @@ loadRoles();
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
+import { ElInput, ElCheckbox, ElEmpty } from "element-plus";
+import { RoleService } from "#/api/system/role";
+import type { RoleRow } from "#/api/system/role/types";
+import { $t } from "#/locales";
+
+const props = withDefaults(
+  defineProps<{
+    value?: string[];
+    multiple?: boolean;
+    rowKey?: string;
+  }>(),
+  {
+    value: () => [],
+    multiple: true,
+    rowKey: "id",
+  }
+);
+
+const emit = defineEmits<{
+  (e: "select", selected: RoleRow[]): void;
+}>();
+
+const searchText = ref("");
+const roles = ref<RoleRow[]>([]);
+const selectedKeys = ref<string[]>([]);
+
+const filteredRoles = computed(() => {
+  if (!searchText.value) return roles.value;
+  const keyword = searchText.value.toLowerCase();
+  return roles.value.filter(
+    (item) =>
+      item.name.toLowerCase().includes(keyword) ||
+      item.code.toLowerCase().includes(keyword)
+  );
+});
+
+const isSelected = (data: RoleRow): boolean => {
+  return selectedKeys.value.includes(String(data[props.rowKey as keyof RoleRow]));
+};
+
+const loadRoles = async () => {
+  try {
+    const response = await RoleService.list();
+    roles.value = Array.isArray(response)
+      ? response
+      : response?.items || response?.list || [];
+
+    if (props.value && props.value.length > 0) {
+      selectedKeys.value = [...props.value];
+    }
+  } catch (error) {
+    console.error("加载角色列表失败:", error);
+    roles.value = [];
+  }
+};
+
+const handleClick = (data: RoleRow) => {
+  if (!props.multiple) {
+    const key = String(data[props.rowKey as keyof RoleRow]);
+    selectedKeys.value = [key];
+    emitSelect();
+  }
+};
+
+const handleCheck = (checked: boolean, data: RoleRow) => {
+  const key = String(data[props.rowKey as keyof RoleRow]);
+  if (checked) {
+    if (!selectedKeys.value.includes(key)) {
+      selectedKeys.value = [...selectedKeys.value, key];
+    }
+  } else {
+    selectedKeys.value = selectedKeys.value.filter((k) => k !== key);
+  }
+  emitSelect();
+};
+
+const emitSelect = () => {
+  const selected = roles.value.filter((item) =>
+    selectedKeys.value.includes(String(item[props.rowKey as keyof RoleRow]))
+  );
+  emit("select", selected);
+};
+
+const getSelected = (): RoleRow[] => {
+  return roles.value.filter((item) =>
+    selectedKeys.value.includes(String(item[props.rowKey as keyof RoleRow]))
+  );
+};
+
+watch(
+  () => props.value,
+  (newValue) => {
+    if (newValue) {
+      selectedKeys.value = Array.isArray(newValue)
+        ? newValue.map((v) => String(v))
+        : [String(newValue)];
+    } else {
+      selectedKeys.value = [];
+    }
+  },
+  { immediate: true }
+);
+
+defineExpose({
+  getSelected,
+});
+
+loadRoles();
+</script>
 
 <style lang="scss" scoped>
 .role-select-dialog {

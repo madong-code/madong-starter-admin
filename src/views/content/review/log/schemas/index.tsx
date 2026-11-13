@@ -149,7 +149,7 @@ export function useCrudSchema(): CrudSchema {
       enabled: true,
     },
     permissions: {
-      view: 'content:review:log:list',
+      view: 'content:review:log:index',
       remove: 'content:review:log:delete',
     },
   };

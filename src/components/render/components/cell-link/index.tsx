@@ -1,15 +1,15 @@
 /**
  * 单元格链接渲染器
  */
-import { ElButton } from 'element-plus';
+import { ElButton } from 'element-plus'
 
 export const CellLinkRenderer = {
   renderTableDefault(renderOpts: any) {
-    const { props } = renderOpts;
+    const { props } = renderOpts
     return (
-      <ElButton link size="small">
+      <ElButton size="small" link>
         {props?.text}
       </ElButton>
-    );
+    )
   },
-};
+}

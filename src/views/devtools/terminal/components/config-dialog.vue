@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { watch } from 'vue';
 
+import { useVbenModal } from '#/core/ui/common';
+
 import {
   ElButton,
   ElForm,
@@ -12,7 +14,6 @@ import {
 } from 'element-plus';
 import { ArrowLeft, Check, Settings } from 'lucide-vue-next';
 
-import { useVbenModal } from '#/core/ui/common';
 import { $t } from '#/locales';
 
 defineOptions({ name: 'TerminalConfigDialog' });

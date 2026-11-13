@@ -99,13 +99,11 @@ export const timestampFormat = (
   };
   for (const k in opt) {
     ret = new RegExp(`(${k})`).exec(fmt);
-    if (ret) {
-      const match = ret[1];
-      if (!match) continue;
-      const value = opt[k] as string;
+    const token = ret?.[1];
+    if (token) {
       fmt = fmt.replace(
-        match,
-        match.length === 1 ? value : padStart(value, match.length, '0'),
+        token,
+        token.length === 1 ? opt[k] : padStart(opt[k], token.length, '0'),
       );
     }
   }

@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { Page } from '@vben/common-ui';
+import { Page } from '@vben/common-ui'
 
-import { useCrud } from '#/adapter/crud';
-import type { CrudSchema } from '#/adapter/crud';
-import { UserService } from '#/api';
+import { useCrud } from '#/adapter/crud'
+import type { CrudSchema } from '#/adapter/crud'
+import { UserService } from '#/api'
 
 const crudSchemaDef = (): CrudSchema => {
   return {
@@ -37,10 +37,10 @@ const crudSchemaDef = (): CrudSchema => {
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'system:admin:create',
-      edit: 'system:admin:update',
-      remove: 'system:admin:delete',
-      view: 'system:admin:read',
+      add: 'system:user:create',
+      edit: 'system:user:update',
+      remove: 'system:user:delete',
+      view: 'system:user:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },
@@ -64,25 +64,15 @@ const crudSchemaDef = (): CrudSchema => {
       title: '用户管理',
       width: '500px',
       schema: [
-        {
-          fieldName: 'id',
-          label: 'ID',
-          component: 'Input',
-          dependencies: { triggerFields: [], show: false },
-        },
-        {
-          fieldName: 'username',
-          label: '用户名',
-          component: 'Input',
-          rules: 'required',
-        },
+        { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { triggerFields: [], show: false } },
+        { fieldName: 'username', label: '用户名', component: 'Input', rules: 'required' },
         { fieldName: 'email', label: '邮箱', component: 'Input' },
       ],
     },
-  };
-};
+  }
+}
 
-const [BasicCrud] = useCrud(crudSchemaDef());
+const [BasicCrud] = useCrud(crudSchemaDef())
 </script>
 ```
 
@@ -93,104 +83,72 @@ const [BasicCrud] = useCrud(crudSchemaDef());
 ```typescript
 interface CrudSchema {
   /** CRUD API 接口配置 */
-  crudApi: CrudApi;
-
+  crudApi: CrudApi
+  
   /** 搜索表单配置 */
-  searchForm?: SearchFormConfig;
-
+  searchForm?: SearchFormConfig
+  
   /** 表单弹窗配置 */
-  formDialog?: FormDialogConfig;
-
+  formDialog?: FormDialogConfig
+  
   // ========== 表格配置项 ==========
-
+  
   /** 行数据的 key 字段，默认 id */
-  rowKey?: string;
-
+  rowKey?: string
+  
   /** 表格列定义 */
-  columns?: CrudColumn[] | (() => CrudColumn[]);
-
+  columns?: CrudColumn[] | (() => CrudColumn[])
+  
   /** 是否显示新增按钮 */
-  hasAdd?: boolean;
-
+  hasAdd?: boolean
+  
   /** 是否显示编辑按钮 */
-  hasEdit?: boolean;
-
+  hasEdit?: boolean
+  
   /** 是否显示删除按钮 */
-  hasRemove?: boolean;
-
+  hasRemove?: boolean
+  
   /** 是否显示详情按钮 */
-  hasView?: boolean;
-
+  hasView?: boolean
+  
   /** 是否显示批量删除按钮 */
-  hasBatchRemove?: boolean;
-
+  hasBatchRemove?: boolean
+  
   /** 操作按钮权限配置 */
-  permissions?: TablePermissionConfig;
-
+  permissions?: TablePermissionConfig
+  
   /** 请求前处理参数 */
-  beforeFetch?: (params: any) => any;
-
+  beforeFetch?: (params: any) => any
+  
   /** 请求后处理结果 */
-  afterFetch?: (res: any) => any;
-
+  afterFetch?: (res: any) => any
+  
   /** 表格行操作按钮 */
-  tableActions?: ActionItem[];
-
+  tableActions?: ActionItem[]
+  
   /** 表格行下拉操作 */
-  dropDownActions?: ActionItem[];
-
+  dropDownActions?: ActionItem[]
+  
   // ... 其他表格配置项（继承自 TableConfig）
 }
 ```
 
 ### formDialog
 
-表单弹窗配置，支持 `modal` 与 `drawer` 两种形态：
+表单弹窗配置：
 
 ```typescript
 interface FormDialogConfig {
-  /** 是否启用，默认 true */
-  enabled?: boolean;
+  /** 是否启用 */
+  enabled?: boolean
   /** 弹窗标题 */
-  title?: string;
-  /** 弹窗宽度，Tailwind class，如 'w-[50%]'；默认 'w-[60%]' */
-  width?: string;
-  /** 弹窗类型，默认 'modal' */
-  dialogType?: 'drawer' | 'modal';
-  /** 表单布局，默认 'horizontal' */
-  layout?: 'horizontal' | 'inline' | 'vertical';
-  /** Grid 布局 class，控制表单列数，默认 'grid-cols-1' */
-  wrapperClass?: string;
-  /** 表单通用配置 */
-  commonConfig?: FormDialogCommonConfig;
-  /** 行数据主键，默认 'id' */
-  rowKey?: string;
-  /** 是否可拖拽（仅 modal 有效），默认 true */
-  draggable?: boolean;
-  /** 是否显示全屏按钮，默认 true（modal 与 drawer 均适用） */
-  fullscreenButton?: boolean;
-  /** 弹窗组件额外 CSS class，如 'top-0' */
-  class?: string;
-  /** 弹窗层级，嵌套弹窗时需设更高值 */
-  zIndex?: number;
+  title?: string
+  /** 弹窗宽度 */
+  width?: string
   /** 表单字段配置 */
-  schema?: VbenFormSchema[] | (() => VbenFormSchema[]);
+  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
   /** 提交前转换表单值 */
-  transformFormValues?: (
-    values: Record<string, any>,
-    type: FormActionType,
-  ) => Record<string, any>;
-  /** 其它配置：api、onSuccess、beforeSubmit、onOpen、confirmText、cancelText */
-}
-```
-
-**全屏按钮的默认值分层**：底层 `useVbenModal` 默认显示、`useVbenDrawer` 默认不显示；CRUD 的 `FormDialog` 对两者都按 `fullscreenButton !== false` 默认开启。因此业务直接使用 `useVbenDrawer` 时若需要全屏按钮，必须显式传 `fullscreenButton: true`；CRUD 页面则要关闭时配置为 `false`：
-
-```typescript
-formDialog: {
-  enabled: true,
-  dialogType: 'drawer',
-  fullscreenButton: false,
+  transformFormValues?: (values: Record<string, any>) => Record<string, any>
 }
 ```
 
@@ -200,10 +158,10 @@ formDialog: {
 
 ```typescript
 permissions: {
-  add: 'system:admin:create',
-  edit: 'system:admin:update',
-  remove: 'system:admin:delete',
-  view: 'system:admin:read',
+  add: 'system:user:create',
+  edit: 'system:user:update',
+  remove: 'system:user:delete',
+  view: 'system:user:read',
 }
 ```
 
@@ -216,21 +174,21 @@ dropDownActions: [
   {
     label: '编辑',
     icon: 'ant-design:edit-outlined',
-    auth: 'system:admin:update',
+    auth: 'system:user:update',
     onClick: ({ row, crudApi }) => {
-      crudApi.openEditDialog(row);
+      crudApi.openEditDialog(row)
     },
   },
   {
     label: '删除',
     icon: 'ant-design:delete-outlined',
     type: 'danger',
-    auth: 'system:admin:delete',
+    auth: 'system:user:delete',
     onClick: ({ row, crudApi }) => {
-      crudApi.openDeleteConfirm(row);
+      crudApi.openDeleteConfirm(row)
     },
   },
-];
+]
 ```
 
 ### ActionItem
@@ -240,24 +198,24 @@ dropDownActions: [
 ```typescript
 interface ActionItem {
   /** 按钮文本 */
-  label: string;
+  label: string
   /** 按钮图标 */
-  icon?: string;
+  icon?: string
   /** 按钮类型 */
-  type?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  type?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
   /** 权限标识 */
-  auth?: string;
+  auth?: string
   /** 是否显示条件 */
-  ifShow?: (params: ActionParams) => boolean;
+  ifShow?: (params: ActionParams) => boolean
   /** 点击事件 */
-  onClick?: (params: ActionParams) => void;
+  onClick?: (params: ActionParams) => void
   /** 确认配置 */
   confirm?: {
-    title?: string;
-    content?: string;
-    ok?: () => void;
-    cancel?: () => void;
-  };
+    title?: string
+    content?: string
+    ok?: () => void
+    cancel?: () => void
+  }
 }
 ```
 
@@ -268,13 +226,13 @@ interface ActionItem {
 ```typescript
 interface Dependencies {
   /** 触发字段 */
-  triggerFields?: string[];
+  triggerFields?: string[]
   /** 是否显示 */
-  show?: boolean;
+  show?: boolean
   /** 是否禁用 */
-  disabled?: boolean;
+  disabled?: boolean
   /** 禁用时的值 */
-  defaultValue?: any;
+  defaultValue?: any
 }
 ```
 
@@ -283,17 +241,17 @@ interface Dependencies {
 ```typescript
 interface CrudApi {
   /** 列表查询 */
-  list: (params: any) => Promise<any>;
+  list: (params: any) => Promise<any>
   /** 新增 */
-  add?: (params: any) => Promise<any>;
+  add?: (params: any) => Promise<any>
   /** 编辑 */
-  edit?: (params: any) => Promise<any>;
+  edit?: (params: any) => Promise<any>
   /** 单个删除 */
-  remove?: (params: any) => Promise<any>;
+  remove?: (params: any) => Promise<any>
   /** 批量删除 */
-  batchRemove?: (params: { ids: any[] }) => Promise<any>;
+  batchRemove?: (params: { ids: any[] }) => Promise<any>
   /** 详情 */
-  view?: (id: any) => Promise<any>;
+  view?: (id: any) => Promise<any>
 }
 ```
 

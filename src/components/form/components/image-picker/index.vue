@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue'
+import { useVModel } from '@vueuse/core'
+import { ElMessage } from 'element-plus'
 
-import { useVModel } from '@vueuse/core';
-import { ElMessage } from 'element-plus';
-
-import { $t } from '#/locales';
-
-import ImageSelectorDialog from './image-picker-dialog.vue';
+import ImageSelectorDialog from './image-picker-dialog.vue'
+import { $t } from '#/locales'
 
 interface Props {
-  modelValue?: null | string | string[];
-  multiple?: boolean;
-  disabled?: boolean;
-  shape?: 'circle' | 'square';
-  size?: 'large' | 'medium' | 'small';
-  accept?: string;
+  modelValue?: string | string[] | null
+  multiple?: boolean
+  disabled?: boolean
+  shape?: 'circle' | 'square'
+  size?: 'small' | 'medium' | 'large'
+  accept?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,63 +22,63 @@ const props = withDefaults(defineProps<Props>(), {
   shape: 'square',
   size: 'medium',
   accept: 'image/*',
-});
+})
 
 const emit = defineEmits<{
-  change: [modelValue: null | string | string[]];
-  confirm: [modelValue: string | string[]];
-  'update:modelValue': [modelValue: null | string | string[]];
-}>();
+  'update:modelValue': [modelValue: string | string[] | null]
+  change: [modelValue: string | string[] | null]
+  confirm: [modelValue: string | string[]]
+}>()
 
-const dialogVisible = ref(false);
+const dialogVisible = ref(false)
 
 const mValue = useVModel(props, 'modelValue', emit, {
   defaultValue: props.modelValue,
   passive: true,
-});
+})
 
 watch(
   () => props.modelValue,
   (newValue) => {
     if (JSON.stringify(newValue) !== JSON.stringify(mValue.value)) {
-      mValue.value = newValue;
+      mValue.value = newValue
     }
   },
-);
+)
 
 const displayImages = computed<string[]>(() => {
-  if (!mValue.value) return [];
-  const values = Array.isArray(mValue.value) ? mValue.value : [mValue.value];
-  return values.filter(Boolean) as string[];
-});
+  if (!mValue.value) return []
+  const values = Array.isArray(mValue.value) ? mValue.value : [mValue.value]
+  return values.filter(Boolean) as string[]
+})
 
 const defaultSelected = computed<string | string[]>(() => {
-  return (mValue.value as string | string[]) || (props.multiple ? [] : '');
-});
+  return (mValue.value as string | string[]) || (props.multiple ? [] : '')
+})
 
 const openSelector = () => {
-  if (props.disabled) return;
-  dialogVisible.value = true;
-};
+  if (props.disabled) return
+  dialogVisible.value = true
+}
 
 const handleConfirm = (selected: string | string[]) => {
-  mValue.value = selected as any;
-  emit('change', selected as string | string[]);
-  emit('confirm', selected as string | string[]);
-  ElMessage.success($t('components.form.image_picker.select_success'));
-};
+  mValue.value = selected as any
+  emit('change', selected as string | string[])
+  emit('confirm', selected as string | string[])
+  ElMessage.success($t('components.form.image_picker.select_success'))
+}
 
 const removeImage = (index: number) => {
-  if (props.disabled) return;
+  if (props.disabled) return
   if (props.multiple && Array.isArray(mValue.value)) {
-    const newValue = [...mValue.value];
-    newValue.splice(index, 1);
-    mValue.value = newValue as any;
+    const newValue = [...mValue.value]
+    newValue.splice(index, 1)
+    mValue.value = newValue as any
   } else {
-    mValue.value = null;
+    mValue.value = null
   }
-  emit('change', mValue.value as null | string | string[]);
-};
+  emit('change', mValue.value as string | string[] | null)
+}
 </script>
 
 <template>
@@ -91,15 +89,8 @@ const removeImage = (index: number) => {
         :class="[`is-${shape}`, `is-${size}`]"
         @click="openSelector"
       >
-        <img
-          v-if="displayImages.length > 0"
-          :src="displayImages[0]"
-          class="preview-image"
-        />
-        <div
-          v-else
-          class="preview-image default-image flex items-center justify-center text-gray-400"
-        >
+        <img v-if="displayImages.length > 0" :src="displayImages[0]" class="preview-image" />
+        <div v-else class="preview-image default-image flex items-center justify-center text-gray-400">
           <Icon icon="lucide:image-plus" :size="32" />
         </div>
 
@@ -110,11 +101,7 @@ const removeImage = (index: number) => {
           </div>
         </div>
 
-        <div
-          v-if="!disabled && displayImages.length > 0"
-          class="remove-btn"
-          @click.stop="removeImage(0)"
-        >
+        <div v-if="!disabled && displayImages.length > 0" class="remove-btn" @click.stop="removeImage(0)">
           <Icon icon="lucide:trash-2" />
         </div>
       </div>
@@ -129,21 +116,12 @@ const removeImage = (index: number) => {
           :class="`is-${size}`"
         >
           <img :src="image" class="preview-image" />
-          <div
-            v-if="!disabled"
-            class="remove-btn"
-            @click.stop="removeImage(index)"
-          >
+          <div v-if="!disabled" class="remove-btn" @click.stop="removeImage(index)">
             <Icon icon="lucide:trash-2" />
           </div>
         </div>
 
-        <div
-          v-if="!disabled"
-          class="image-preview-wrapper is-square add-btn"
-          :class="`is-${size}`"
-          @click="openSelector"
-        >
+        <div v-if="!disabled" class="image-preview-wrapper is-square add-btn" :class="`is-${size}`" @click="openSelector">
           <Icon icon="lucide:plus" class="text-2xl" />
           <div class="add-text">
             {{ $t('components.form.image_picker.select') }}
@@ -171,20 +149,18 @@ const removeImage = (index: number) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  cursor: pointer;
   background: var(--el-fill-color-light);
   border: 2px dashed var(--el-border-color);
+  cursor: pointer;
   transition: all 0.3s;
+  overflow: hidden;
 }
 
 .image-preview-wrapper:hover:not(.add-btn) {
   border-color: var(--el-color-primary);
-
   .image-overlay {
     opacity: 1;
   }
-
   .remove-btn {
     display: flex;
   }
@@ -214,14 +190,14 @@ const removeImage = (index: number) => {
 }
 
 .image-preview-wrapper.add-btn {
+  border-style: dashed;
   flex-direction: column;
   gap: 4px;
-  border-style: dashed;
 }
 
 .image-preview-wrapper.add-btn:hover {
-  background: var(--el-color-primary-light-9);
   border-color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
 }
 
 .preview-image {
@@ -237,32 +213,32 @@ const removeImage = (index: number) => {
 .image-overlay {
   position: absolute;
   inset: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
-  background: rgb(0 0 0 / 60%);
   opacity: 0;
   transition: opacity 0.3s;
+  color: white;
 }
 
 .overlay-text {
-  margin-top: 4px;
   font-size: 12px;
+  margin-top: 4px;
 }
 
 .remove-btn {
   position: absolute;
   bottom: 8px;
   left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
   display: none;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
   cursor: pointer;
-  transform: translateX(-50%);
   transition: all 0.3s;
 }
 

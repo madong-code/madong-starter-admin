@@ -77,9 +77,7 @@ export function shuffle<T>(arr: T[]): T[] {
   const array = [...arr]; // 创建新数组避免修改原数组
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    const current = array[i] as T;
-    array[i] = array[j] as T;
-    array[j] = current;
+    [array[i], array[j]] = [array[j]!, array[i]!];
   }
   return array;
 }

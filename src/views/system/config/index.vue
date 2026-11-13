@@ -4,10 +4,11 @@ import type { TabsPaneContext } from 'element-plus';
 import { defineAsyncComponent, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { ElTabPane, ElTabs } from 'element-plus';
+import { useAccess } from '#/core/access';
+
+import { ElCard, ElTabPane, ElTabs } from 'element-plus';
 
 import { Page } from '#/components/page';
-import { useAccess } from '#/core/access';
 import { $t } from '#/locales';
 
 const router = useRouter();
@@ -32,8 +33,6 @@ const handleClick = (tab: TabsPaneContext) => {
 };
 
 const settingList = ref([
-  // 站点设置（site_setting）：ERP 后台管理系统自身的站点信息；
-  // web 前台门户站点设置在「基础管理 → 公共设置 → 网站设置 → 站点设置」（web_site_setting 行），两者分离存储
   {
     component: markRaw(
       defineAsyncComponent(() => import('./components/site.vue')),
@@ -42,6 +41,22 @@ const settingList = ref([
     name: $t('system.config.site.title'),
     loadKey: 0,
   },
+  // {
+  //   component: markRaw(
+  //     defineAsyncComponent(() => import('./components/web-site.vue')),
+  //   ),
+  //   key: '6',
+  //   name: $t('system.config.web_site.title'),
+  //   loadKey: 0,
+  // },
+  // {
+  //   component: markRaw(
+  //     defineAsyncComponent(() => import('./components/baidu-tongji.vue')),
+  //   ),
+  //   key: '7',
+  //   name: $t('system.config.baidu_tongji.title'),
+  //   loadKey: 0,
+  // },
   {
     component: markRaw(
       defineAsyncComponent(() => import('./components/upload.vue')),
@@ -70,14 +85,15 @@ const settingList = ref([
 </script>
 
 <template>
-  <Page class="bg-card" content-class="p-4 md:p-6">
-    <div class="min-w-0">
-      <ElTabs v-model="activeName" class="config-tabs" @tab-click="handleClick">
+  <Page>
+    <ElCard>
+      <ElTabs v-model="activeName" @tab-click="handleClick">
         <ElTabPane
           v-for="item in settingList"
           :key="item.key"
           :name="item.key"
           :label="item.name"
+          class="mt-5"
         >
           <component :is="item.component" :key="item.loadKey" v-bind="$attrs" />
         </ElTabPane>
@@ -88,39 +104,6 @@ const settingList = ref([
           :label="$t('system.config.common.title')"
         />
       </ElTabs>
-    </div>
+    </ElCard>
   </Page>
 </template>
-
-<style scoped>
-.config-tabs {
-  --el-tabs-header-height: 40px;
-}
-
-.config-tabs :deep(.el-tabs__header) {
-  margin-bottom: 20px;
-}
-
-.config-tabs :deep(.el-tabs__nav-wrap) {
-  overflow-x: auto;
-}
-
-.config-tabs :deep(.el-tabs__nav-wrap::after) {
-  background-color: var(--el-border-color-lighter);
-}
-
-.config-tabs :deep(.el-tabs__item) {
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.config-tabs :deep(.el-tabs__item:hover),
-.config-tabs :deep(.el-tabs__item.is-active) {
-  color: var(--el-color-primary);
-}
-
-.config-tabs :deep(.el-tabs__item.is-active) {
-  font-weight: 500;
-}
-</style>

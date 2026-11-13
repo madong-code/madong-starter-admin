@@ -1,6 +1,8 @@
 <script setup lang="ts">
-/** 插件开发：仅平台运营端可用，非平台账号打开返回 403 未授权 */
+/** 插件开发：仅非租户模式可用，租户打开返回 403 未授权 */
 import { onMounted, ref } from 'vue';
+
+import { Fallback } from '#/core/ui/common';
 
 import { ElMessageBox } from 'element-plus';
 
@@ -8,7 +10,6 @@ import { useCrud } from '#/adapter/crud';
 import { AppPluginDevelopService } from '#/api/app/plugin/develop';
 import { requestClient } from '#/api/request';
 import { Page } from '#/components/page';
-import { Fallback } from '#/core/ui/common';
 import { $t } from '#/locales';
 
 import { useCrudSchema } from './schemas';

@@ -1,39 +1,33 @@
-<script setup lang="ts">
-import { computed } from 'vue';
+<template>
+  <ApiComponent v-model="value" model-prop-name="modelValue" :component="Select" />
+</template>
 
-import ApiComponent from '../api-component/index.vue';
-import Select from '../select/index.vue';
+<script setup lang="ts">
+import ApiComponent from '../api-component/index.vue'
+import Select from '../select/index.vue'
 
 const props = defineProps<{
-  modelValue?: Array<number | string> | null | number | string | undefined;
-}>();
+  modelValue?: string | undefined | number | null | Array<string | number>
+}>()
 
 const emit = defineEmits<{
-  'update:modelValue': [
-    modelValue: Array<number | string> | null | number | string | undefined,
-  ];
-}>();
+  'update:modelValue': [modelValue: string | undefined | number | null | Array<string | number>]
+}>()
 
 const value = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue
   },
   set(val) {
-    emit('update:modelValue', val);
+    emit('update:modelValue', val)
   },
-});
+})
+
+import { computed } from 'vue'
 
 defineExpose({
   getValue() {
-    return value.value;
+    return value.value
   },
-});
+})
 </script>
-
-<template>
-  <ApiComponent
-    v-model="value"
-    model-prop-name="modelValue"
-    :component="Select"
-  />
-</template>

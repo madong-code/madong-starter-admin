@@ -3,10 +3,11 @@ import type { FormActionType, FormDialogOptions } from './types';
 
 import { computed, nextTick, ref } from 'vue';
 
+import { useVbenDrawer, useVbenModal } from '#/core/ui/common';
+
 import { ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
-import { useVbenDrawer, useVbenModal } from '#/core/ui/common';
 import { $t } from '#/locales';
 
 import { DetailViewer } from '../viewer';
@@ -78,8 +79,6 @@ const formOptions = computed(() => {
     rowKey: _rowKey,
     draggable: _draggable,
     fullscreenButton: _fullscreenButton,
-    class: _class,
-    zIndex: _zIndex,
     onSuccess: _onSuccess,
     beforeSubmit: _beforeSubmit,
     onOpen: _onOpen,
@@ -120,8 +119,6 @@ const dialogClass = computed(() => {
   if (props.options.class) cls.push(props.options.class);
   return cls.join(' ');
 });
-// 表单内容层恒占满弹窗宽度（与 mono 模板一致）；
-// 控件宽度由字段级 controlClass / formItemClass(col-span) 控制，弹窗滚动容器恒占满弹窗宽度。
 const rowKey = computed(() => props.options.rowKey || 'id');
 const isView = computed(() => viewType.value === 'view');
 
@@ -155,8 +152,6 @@ const [Modal, modalApi] = useVbenModal({
 
 // === Drawer ===
 const [Drawer, drawerApi] = useVbenDrawer({
-  fullscreenButton: props.options.fullscreenButton !== false,
-  zIndex: props.options.zIndex,
   confirmText: props.options.confirmText,
   cancelText: props.options.cancelText,
   async onConfirm() {
@@ -171,7 +166,7 @@ const currentApi = computed(() =>
   props.options.dialogType === 'drawer' ? drawerApi : modalApi,
 );
 
-async function handleOpen() {
+function handleOpen() {
   const data = currentApi.value.getData<Record<string, any>>();
   if (data) currentRow.value = data;
 
@@ -183,34 +178,16 @@ async function handleOpen() {
 
   if (viewType.value === 'edit' || viewType.value === 'view') {
     const api = props.options.api;
-    // 雪花ID(18位)超过 JS Number.MAX_SAFE_INTEGER，转 number 会丢精度(末位归零)。
-    // 任何上游环节(列表、路由、vxe-grid、ApiTreeSelect)一旦把 id 转成 number，
-    // 回填表单后再次请求详情就会因 id 不匹配返回 Not Found。
-    // 这里在 view 拿回数据 → setValues → 表单渲染 链路入口统一把 id 还原为字符串。
-    const protectId = (row: null | Record<string, any> | undefined) => {
-      if (!row) return row;
-      if (row[rowKey.value] !== undefined && row[rowKey.value] !== null) {
-        row[rowKey.value] = String(row[rowKey.value]);
-      }
-      return row;
-    };
     if (api?.view) {
-      const rawId = currentRow.value[rowKey.value];
-      api
-        .view(rawId === undefined || rawId === null ? rawId : String(rawId))
-        .then((res: any) => {
-          currentRow.value = protectId({
-            ...currentRow.value,
-            ...protectId(res),
+      api.view(currentRow.value[rowKey.value]).then((res: any) => {
+        currentRow.value = { ...currentRow.value, ...res };
+        if (viewType.value !== 'view') {
+          nextTick(() => {
+            formApi.setValues(currentRow.value);
           });
-          if (viewType.value !== 'view') {
-            nextTick(() => {
-              formApi.setValues(currentRow.value);
-            });
-          }
-        });
+        }
+      });
     } else {
-      currentRow.value = protectId(currentRow.value);
       if (viewType.value !== 'view') {
         nextTick(() => {
           formApi.setValues(currentRow.value);
@@ -218,17 +195,11 @@ async function handleOpen() {
       }
     }
   } else {
-    // 等待 resetForm 完全完成（其内部为异步重置）后再 setValues，
-    // 否则 resetForm 的异步默认重置会覆盖刚设置的父级 pid，导致新增子节点父级选不中
-    await formApi.resetForm();
-    const values = { ...currentRow.value };
-    // 树形新增子节点：当前行是父节点（带 id），新记录的 pid 应为父节点 id
-    if (currentRow.value?.id) {
-      values.pid = currentRow.value.id;
-      // 清除父节点的 id，避免新记录误带父级主键
-      delete values.id;
-    }
-    formApi.setValues(values);
+    nextTick(() => {
+      // 先重置清空旧数据，再设置新值（树形新增子节点时会带 pid）
+      formApi.resetForm();
+      formApi.setValues(currentRow.value);
+    });
   }
 
   props.options.onOpen?.(viewType.value, currentRow.value);
@@ -246,16 +217,6 @@ async function handleSubmit() {
   currentApi.value.lock();
   try {
     let values = await formApi.getValues();
-
-    // 编辑模式：确保主键为字符串
-    // 雪花ID(18位)超出 JS Number.MAX_SAFE_INTEGER，列表/表单环节一旦转成 number 会丢精度(末位归零)，
-    // 保存时后端按主键查不到记录。这里统一用回填详情时的原始 id 覆盖，保证主键字符串透传。
-    if (viewType.value === 'edit') {
-      const key = rowKey.value;
-      const rawId = currentRow.value[key];
-      const id = rawId !== undefined && rawId !== null ? String(rawId) : '';
-      values = { ...values, [key]: id };
-    }
 
     // 提交前转换
     if (props.options.transformFormValues) {
@@ -338,14 +299,6 @@ defineExpose({
 </script>
 
 <template>
-  <!--
-    滚动条与表单布局解耦约束：
-    1. 滚动条只由弹窗内部滚动容器（vben Modal/Drawer 的 content 区域）产生，
-       该容器必须始终占满弹窗宽度 —— 严禁通过 :content-class 向其传递任何宽度类，
-       否则滚动条会随宽度内缩而"错位"到弹窗中部。
-    2. 表单内容层恒占满弹窗宽度；列数（wrapperClass）与控件宽度（controlClass）
-       只影响内容自身的视觉布局，不会影响滚动条位置。
-  -->
   <Modal
     v-if="options.dialogType !== 'drawer'"
     :title="dialogTitle"

@@ -1,7 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { preferences } from '#/core/preferences';
 import { LOGIN_PATH } from '#/core/shared/constants';
+import { preferences } from '#/core/preferences';
+
 import { $t } from '#/locales';
 
 const BasicLayout = () => import('#/layouts/basic.vue');
@@ -35,7 +36,8 @@ const coreRoutes: RouteRecordRaw[] = [
     name: 'Root',
     path: '/',
     redirect: preferences.app.defaultHomePath,
-    children: [],
+    children: [
+    ],
   },
   {
     component: AuthPageLayout,
@@ -90,7 +92,7 @@ const coreRoutes: RouteRecordRaw[] = [
         },
       },
     ],
-  },
+  }
 ];
 
 export { coreRoutes, fallbackNotFoundRoute };

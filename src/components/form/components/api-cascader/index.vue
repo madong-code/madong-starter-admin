@@ -1,45 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-import { ElCascader } from 'element-plus';
-
-import ApiComponent from '../api-component/index.vue';
-
-const props = withDefaults(
-  defineProps<{
-    childrenField?: string;
-    labelField?: string;
-    modelValue?: Array<number | string>;
-    valueField?: string;
-  }>(),
-  {
-    modelValue: () => [],
-    valueField: 'id',
-    labelField: 'name',
-    childrenField: 'children',
-  },
-);
-
-const emit = defineEmits<{
-  'update:modelValue': [modelValue: Array<number | string> | undefined];
-}>();
-
-const value = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(val) {
-    emit('update:modelValue', val);
-  },
-});
-
-defineExpose({
-  getValue() {
-    return value.value;
-  },
-});
-</script>
-
 <template>
   <ApiComponent
     v-model="value"
@@ -50,3 +8,43 @@ defineExpose({
     style="width: 100%"
   />
 </template>
+
+<script setup lang="ts">
+import ApiComponent from '../api-component/index.vue'
+import { computed } from 'vue'
+import { ElCascader } from 'element-plus'
+
+const props = withDefaults(
+  defineProps<{
+    modelValue?: Array<string | number>
+    valueField?: string
+    labelField?: string
+    childrenField?: string
+  }>(),
+  {
+    modelValue: () => [],
+    valueField: 'id',
+    labelField: 'name',
+    childrenField: 'children',
+  },
+)
+
+const emit = defineEmits<{
+  'update:modelValue': [modelValue: Array<string | number> | undefined]
+}>()
+
+const value = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  },
+})
+
+defineExpose({
+  getValue() {
+    return value.value
+  },
+})
+</script>

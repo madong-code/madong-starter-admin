@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import type { TabOption } from '#/core/shared/types';
 import type { AnalysisOverviewItem } from '#/core/ui/common';
+import type { TabOption } from '#/core/shared/types';
 
+import {
+  AnalysisChartCard,
+  AnalysisChartsTabs,
+  AnalysisOverview,
+} from '#/core/ui/common';
 import {
   SvgBellIcon,
   SvgCakeIcon,
   SvgCardIcon,
   SvgDownloadIcon,
 } from '#/core/design/icons';
-import {
-  AnalysisChartCard,
-  AnalysisChartsTabs,
-  AnalysisOverview,
-} from '#/core/ui/common';
 
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';

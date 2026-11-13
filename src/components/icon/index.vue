@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ElIcon } from 'element-plus';
-
 import { IconifyIcon as VbenIcon } from '#/core/design/icons';
+
+import { ElIcon } from 'element-plus';
 
 const props = defineProps({
   icon: {
