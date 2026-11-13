@@ -1,0 +1,56 @@
+{
+  "select_dept": {
+    "placeholder": "Please select department",
+    "modal_button": "Select",
+    "modal_title": "Select Department",
+    "search_placeholder": "Search department",
+    "tree_operation": "Tree Operations",
+    "expand_all": "Expand All",
+    "collapse_all": "Collapse All",
+    "select_all": "Select All",
+    "cancel_select_all": "Cancel Select All"
+  },
+  "select_position": {
+    "placeholder": "Please select position",
+    "modal_button": "Select",
+    "modal_title": "Select Position",
+    "search_placeholder": "Search position",
+    "tree_operation": "Tree Operations",
+    "expand_all": "Expand All",
+    "collapse_all": "Collapse All",
+    "select_all": "Select All",
+    "cancel_select_all": "Cancel Select All"
+  },
+  "select_role": {
+    "placeholder": "Please select role",
+    "modal_button": "Select",
+    "modal_title": "Select Role",
+    "search_placeholder": "Search role",
+    "empty_description": "No role data"
+  },
+  "image_picker": {
+    "title": "Select Image",
+    "select": "Select Image",
+    "select_success": "Selected successfully",
+    "search_placeholder": "Search image name",
+    "upload": "Upload Image",
+    "upload_success": "Uploaded successfully",
+    "upload_error": "Upload failed",
+    "load_error": "Failed to load images",
+    "empty": "No images",
+    "format_error": "Only {exts} images are supported",
+    "size_error": "Image must be no larger than {size}MB"
+  },
+  "upload_field": {
+    "drag_hint": "Drag a file here, or click to select",
+    "image_hint": "Drag an image here, or click to select",
+    "replace": "Click or drag to replace",
+    "uploading": "Uploading",
+    "upload_success": "Uploaded successfully",
+    "upload_error": "Upload failed",
+    "format_error": "Only {exts} files are supported",
+    "size_error": "File must be no larger than {size}MB",
+    "remove": "Remove",
+    "external_placeholder": "You can also paste an external URL"
+  }
+}

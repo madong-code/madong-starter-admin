@@ -1,0 +1,42 @@
+{
+  "title": "会员管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "用户名",
+      "nickname": "昵称",
+      "phone": "手机号",
+      "email": "邮箱",
+      "level_name": "等级",
+      "balance": "余额",
+      "points": "积分",
+      "tags": "标签",
+      "enabled": "状态",
+      "created_at": "注册时间"
+    },
+    "search": {
+      "username": "用户名",
+      "nickname": "昵称",
+      "phone": "手机号",
+      "enabled": "状态"
+    }
+  },
+  "form": {
+    "username": "用户名",
+    "password": "密码",
+    "nickname": "昵称",
+    "phone": "手机号",
+    "email": "邮箱",
+    "level_id": "等级",
+    "enabled": "状态",
+    "remark": "备注"
+  },
+  "reset_password": {
+    "title": "重置密码",
+    "content": "确定重置会员「{0}」的登录密码吗？",
+    "placeholder": "请输入新密码（6-20 位）",
+    "required": "请输入新密码",
+    "length": "密码长度需为 6-20 位",
+    "success": "密码重置成功"
+  }
+}
